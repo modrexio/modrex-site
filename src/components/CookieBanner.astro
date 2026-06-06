@@ -17,8 +17,8 @@
     ;(function () {
         const consent = localStorage.getItem('cookie_consent')
         if (consent === 'granted') {
-            if (typeof gtag === 'function')
-                gtag('consent', 'update', { analytics_storage: 'granted' })
+            if (typeof window.gtag === 'function')
+                window.gtag('consent', 'update', { analytics_storage: 'granted' })
             return
         }
         if (consent === 'denied') return
@@ -28,9 +28,8 @@
 
         document.getElementById('cookie-accept').addEventListener('click', function () {
             localStorage.setItem('cookie_consent', 'granted')
-
-            if (typeof gtag === 'function')
-                gtag('consent', 'update', { analytics_storage: 'granted' })
+            if (typeof window.gtag === 'function')
+                window.gtag('consent', 'update', { analytics_storage: 'granted' })
             banner.hidden = true
         })
 

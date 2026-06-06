@@ -47,22 +47,19 @@ const ogImage = new URL('/logo.png', Astro.site).href
         <!-- Google Analytics (Consent Mode v2: denied by default) -->
         <script is:inline>
             window.dataLayer = window.dataLayer || []
-            function gtag() {
-                // eslint-disable-next-line prefer-rest-params
-                dataLayer.push(arguments)
+            window.gtag = function (...args) {
+                window.dataLayer.push(args)
             }
-            gtag('consent', 'default', {
+            window.gtag('consent', 'default', {
                 analytics_storage: 'denied',
                 ad_storage: 'denied',
                 wait_for_update: 500,
             })
+            window.gtag('js', new Date())
+            window.gtag('config', 'G-51PXP0HVZD')
         </script>
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-51PXP0HVZD" is:inline
         ></script>
-        <script is:inline>
-            gtag('js', new Date())
-            gtag('config', 'G-51PXP0HVZD')
-        </script>
     </head>
     <body>
         <slot />
