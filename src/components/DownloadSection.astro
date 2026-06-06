@@ -124,12 +124,17 @@ const linuxFiles: DlFile[] = [
     import { createIcons, Download } from 'lucide'
     createIcons({ icons: { Download } })
 
+    const isMobile =
+        /Android|iPhone|iPad|iPod/.test(navigator.userAgent) ||
+        (navigator.maxTouchPoints > 1 && /Mac/.test(navigator.userAgent))
     const isLinux = /Linux|X11/.test(navigator.userAgent) && !/Android/.test(navigator.userAgent)
-    const cardId = isLinux ? 'dl-card-lin' : 'dl-card-win'
-    const badgeId = isLinux ? 'badge-lin' : 'badge-win'
-    document.getElementById(cardId)?.classList.add('os-match')
-    const badge = document.getElementById(badgeId)
-    if (badge) badge.style.display = 'inline-block'
+    if (!isMobile) {
+        const cardId = isLinux ? 'dl-card-lin' : 'dl-card-win'
+        const badgeId = isLinux ? 'badge-lin' : 'badge-win'
+        document.getElementById(cardId)?.classList.add('os-match')
+        const badge = document.getElementById(badgeId)
+        if (badge) badge.style.display = 'inline-block'
+    }
 </script>
 
 <style>
