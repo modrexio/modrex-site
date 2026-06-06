@@ -65,6 +65,16 @@ const isLinux = /Linux|X11/.test(navigator.userAgent) && !/Android/.test(navigat
 
 On mobile: no OS highlight or badge is shown, and the hero button shows a generic "Download" label. On desktop Linux: switch to Linux assets. On desktop Windows/other: default to Windows assets. **Keep all three files in sync** when changing this logic.
 
+### SEO
+
+`astro.config.mjs` sets `site: 'https://modrex.net'` — this powers `Astro.site` and `Astro.url` throughout the app. The sitemap integration auto-generates `/sitemap-index.xml` at build time from all static routes.
+
+`BaseLayout.astro` emits: `<meta name="description">`, `<link rel="canonical">`, Open Graph tags (`og:title/description/image/url/type/site_name`), and Twitter card tags. The default `og:image` is `/browse-mods.png` resolved to an absolute URL via `new URL('/browse-mods.png', Astro.site)`. `BaseLayout` has a `<slot name="head" />` inside `<head>` for page-specific injections.
+
+`src/pages/index.astro` injects a `SoftwareApplication` JSON-LD block via `<script type="application/ld+json" is:inline set:html={...} slot="head">`. The `is:inline` directive is required when using `set:html` on a script tag.
+
+`public/robots.txt` allows all crawlers and points to the sitemap URL. If the domain changes, update `site` in `astro.config.mjs`, the sitemap URL in `robots.txt`, and the `url`/`downloadUrl` in the JSON-LD in `index.astro` — all three must match.
+
 ### Icons
 
 Lucide icons via the `lucide` package (not `lucide-react`). In each component that needs icons: import `createIcons` + the specific icons, call `createIcons({ icons: { ... } })` inside a `<script>` block. Use `<i data-lucide="icon-name">` in markup. Add `display: block` to both `i` and `svg` selectors to avoid inline-element alignment issues.
