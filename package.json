@@ -43,6 +43,7 @@
         "zod": "^4.4.3"
     },
     "dependencies": {
+        "@astrojs/sitemap": "^3.7.3",
         "lucide": "^1.17.0"
     }
 }

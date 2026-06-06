@@ -14,9 +14,27 @@ try {
 } catch {
     // GitHub API unavailable at build time — release data optional
 }
+
+const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Modrex',
+    description: 'Free, open-source desktop mod manager for PAYDAY 3.',
+    operatingSystem: ['Windows', 'Linux'],
+    applicationCategory: 'GameApplication',
+    offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+    },
+    url: 'https://modrex.net',
+    downloadUrl: 'https://github.com/modrexio/modrex/releases/latest',
+    softwareVersion: release?.tag_name?.replace(/^v/, '') ?? undefined,
+}
 ---
 
 <BaseLayout title="Modrex">
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} slot="head" />
     <Nav release={release} />
     <Hero release={release} />
     <Features />
