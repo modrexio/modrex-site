@@ -41,7 +41,9 @@ const ogImage = new URL('/logo.png', Astro.site).href
         <meta name="twitter:image" content={ogImage} />
 
         <title>{pageTitle}</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.ico" sizes="32x32" />
+        <link rel="icon" href="/icon.png" type="image/png" sizes="512x512" />
+        <link rel="apple-touch-icon" href="/icon.png" />
         <slot name="head" />
 
         <!-- Google Analytics (Consent Mode v2: denied by default) -->
