@@ -107,4 +107,16 @@ const features: [string, string, string][] = [
         color: var(--text-secondary);
         margin: 0;
     }
+
+    @media (max-width: 860px) {
+        .features-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 500px) {
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>

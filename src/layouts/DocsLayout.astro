@@ -41,4 +41,12 @@ const section = NAV.find((g) => g.items.some((i) => i.href === currentPath))?.la
     article {
         max-width: 720px;
     }
+
+    @media (max-width: 768px) {
+        .docs-grid {
+            grid-template-columns: 1fr;
+            gap: 0;
+            padding: 32px 0 64px;
+        }
+    }
 </style>
