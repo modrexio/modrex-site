@@ -65,6 +65,20 @@ const isLinux = /Linux|X11/.test(navigator.userAgent) && !/Android/.test(navigat
 
 On mobile: no OS highlight or badge is shown, and the hero button shows a generic "Download" label. On desktop Linux: switch to Linux assets. On desktop Windows/other: default to Windows assets. **Keep all three files in sync** when changing this logic.
 
+### Analytics & consent
+
+`BaseLayout.astro` includes GA4 (measurement ID `G-51PXP0HVZD`) with Consent Mode v2. Analytics tracking is **denied by default** and only enabled after the user accepts via `CookieBanner.astro`.
+
+Key constraint: ESLint's `prefer-rest-params` rule fires inside `<script is:inline>` blocks, and each block is treated as an independent scope (`no-undef` fires on bare globals from another block). The gtag function uses rest params and `window.` prefix throughout:
+
+```js
+window.gtag = function (...args) {
+    window.dataLayer.push(args)
+}
+```
+
+`CookieBanner.astro` stores consent in `localStorage` (`cookie_consent = 'granted' | 'denied'`) and calls `window.gtag('consent', 'update', ...)` on accept. It renders at the bottom-left corner of every page.
+
 ### SEO
 
 `astro.config.mjs` sets `site: 'https://modrex.net'` — this powers `Astro.site` and `Astro.url` throughout the app. The sitemap integration auto-generates `/sitemap-index.xml` at build time from all static routes.
@@ -74,6 +88,10 @@ On mobile: no OS highlight or badge is shown, and the hero button shows a generi
 `src/pages/index.astro` injects a `SoftwareApplication` JSON-LD block via `<script type="application/ld+json" is:inline set:html={...} slot="head">`. The `is:inline` directive is required when using `set:html` on a script tag.
 
 `public/robots.txt` allows all crawlers and points to the sitemap URL. If the domain changes, update `site` in `astro.config.mjs`, the sitemap URL in `robots.txt`, and the `url`/`downloadUrl` in the JSON-LD in `index.astro` — all three must match.
+
+### Static assets
+
+`public/icons/` contains SVG icons for platforms (`windows`, `linux`) and launchers (`steam`, `epicgames`, `xbox`) in normal and `-white` variants (e.g. `steam-white.svg`). Use the `-white` variants in the dark-only UI. In MDX files, always use self-closing `<img />` — bare `<img>` causes an MDX parse error.
 
 ### Icons
 
