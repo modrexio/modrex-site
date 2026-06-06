@@ -69,7 +69,7 @@ On mobile: no OS highlight or badge is shown, and the hero button shows a generi
 
 `astro.config.mjs` sets `site: 'https://modrex.net'` — this powers `Astro.site` and `Astro.url` throughout the app. The sitemap integration auto-generates `/sitemap-index.xml` at build time from all static routes.
 
-`BaseLayout.astro` emits: `<meta name="description">`, `<link rel="canonical">`, Open Graph tags (`og:title/description/image/url/type/site_name`), and Twitter card tags. The default `og:image` is `/browse-mods.png` resolved to an absolute URL via `new URL('/browse-mods.png', Astro.site)`. `BaseLayout` has a `<slot name="head" />` inside `<head>` for page-specific injections.
+`BaseLayout.astro` emits: `<meta name="description">`, `<link rel="canonical">`, Open Graph tags (`og:title/description/image/url/type/site_name`), and Twitter card tags. The default `og:image` is `/logo.png` resolved to an absolute URL via `new URL('/logo.png', Astro.site)`. `BaseLayout` has a `<slot name="head" />` inside `<head>` for page-specific injections.
 
 `src/pages/index.astro` injects a `SoftwareApplication` JSON-LD block via `<script type="application/ld+json" is:inline set:html={...} slot="head">`. The `is:inline` directive is required when using `set:html` on a script tag.
 
