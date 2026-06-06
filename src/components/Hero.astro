@@ -36,7 +36,7 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
                     />
                     <span id="hero-dl-label">Download for Windows</span>
                 </a>
-                <a href="/#download" class="btn-lg secondary">Other platforms</a>
+                <a href="/#download" class="btn-lg secondary other-platforms">Other platforms</a>
             </div>
             <p class="hero-meta">
                 Free &amp; open-source{version ? ` · v${version}` : ''} · powered by
@@ -79,6 +79,8 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
     if (isMobile) {
         if (label) label.textContent = 'Download'
         if (icon) icon.style.display = 'none'
+        const other = document.querySelector<HTMLElement>('.other-platforms')
+        if (other) other.style.display = 'none'
     } else if (isLinux) {
         if (label) label.textContent = 'Download for Linux'
         if (icon) icon.src = '/icons/linux-white.svg'
