@@ -1,0 +1,91 @@
+---
+import type { Release } from '../lib/github'
+
+interface Props {
+    activePage?: string
+    release?: Release | null
+}
+const { activePage = '', release = null } = Astro.props
+
+const fallback = 'https://github.com/modrexio/modrex/releases/latest'
+const winUrl =
+    release?.assets.find((a) => a.name.endsWith('.exe'))?.browser_download_url ?? fallback
+const linUrl =
+    release?.assets.find((a) => a.name.endsWith('.AppImage'))?.browser_download_url ?? fallback
+---
+
+<nav>
+    <div class="wrap nav-inner">
+        <a href="/" class="modrex-wordmark" style="font-size: 28px">MOD<span>REX</span></a>
+        <div class="nav-links">
+            <a href="/#screenshots">Screenshots</a>
+            <a href="/#features">Features</a>
+            <a href="/#download">Download</a>
+            <a href="/docs/getting-started" class:list={[{ active: activePage === 'docs' }]}>Docs</a
+            >
+            <a href="https://github.com/modrexio/modrex" target="_blank" rel="noopener">GitHub</a>
+        </div>
+        <div class="nav-right">
+            <a
+                id="nav-dl-btn"
+                href={winUrl}
+                data-win={winUrl}
+                data-lin={linUrl}
+                class="btn-lg primary nav-dl-btn"
+                style="padding: 8px 16px; font-size: 13px"
+            >
+                Download
+            </a>
+        </div>
+    </div>
+</nav>
+
+<script>
+    const btn = document.getElementById('nav-dl-btn') as HTMLAnchorElement | null
+    if (btn) {
+        const isLinux =
+            /Linux|X11/.test(navigator.userAgent) && !/Android/.test(navigator.userAgent)
+        if (isLinux) btn.href = btn.dataset.lin ?? btn.href
+    }
+</script>
+
+<style>
+    nav {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        background: color-mix(in srgb, var(--color-surface) 86%, transparent);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 60px;
+    }
+
+    .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+    }
+
+    .nav-links a {
+        color: var(--text-secondary);
+        font-size: 14px;
+        text-decoration: none;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+        color: var(--color-text);
+    }
+
+    .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+</style>

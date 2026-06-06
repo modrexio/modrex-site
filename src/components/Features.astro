@@ -1,0 +1,110 @@
+---
+const features: [string, string, string][] = [
+    [
+        'compass',
+        'Browse modworkshop',
+        'Search the full PAYDAY 3 catalog with categories, sorting, and rich mod pages - images, changelogs, and dependencies.',
+    ],
+    [
+        'download',
+        'One-click install',
+        'Install, enable, disable, and remove in a click. Supports .pak, .zip, and .7z, with multi-file mods grouped as one.',
+    ],
+    [
+        'folder-tree',
+        'Organize in folders',
+        'Sort your library into nested folders of any depth, with drag-and-drop reordering that sticks.',
+    ],
+    [
+        'refresh-cw',
+        'Smart updates',
+        'Modrex detects out-of-date mods and lets you update them selectively - or all at once.',
+    ],
+    [
+        'play',
+        'Launch your way',
+        'Boot modded or vanilla straight from the app. Vanilla launches hide your mods and restore them on exit.',
+    ],
+    [
+        'crosshair',
+        'Auto-detects your install',
+        'Finds PAYDAY 3 across Steam, Epic Games, and the Xbox App - and identifies stray .pak files by hash.',
+    ],
+]
+---
+
+<section id="features">
+    <div class="wrap">
+        <div class="sec-head">
+            <span class="sec-eyebrow">Everything in one place</span>
+            <h2 class="sec-title">Built for modding PAYDAY 3</h2>
+            <p class="sec-sub">
+                No more dragging .pak files into folders by hand. Modrex handles discovery, install,
+                updates, and launch - so you can get back to the heist.
+            </p>
+        </div>
+        <div class="features-grid">
+            {
+                features.map(([icon, title, body]) => (
+                    <div class="feature">
+                        <div class="ic">
+                            <i data-lucide={icon} />
+                        </div>
+                        <h3>{title}</h3>
+                        <p>{body}</p>
+                    </div>
+                ))
+            }
+        </div>
+    </div>
+</section>
+
+<script>
+    import { createIcons, Compass, Download, FolderTree, RefreshCw, Play, Crosshair } from 'lucide'
+    createIcons({ icons: { Compass, Download, FolderTree, RefreshCw, Play, Crosshair } })
+</script>
+
+<style>
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+
+    .feature {
+        background: var(--color-surface-raised);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        transition: border-color var(--duration) var(--ease);
+    }
+
+    .feature:hover {
+        border-color: var(--color-surface-light);
+    }
+
+    .ic {
+        width: 40px;
+        height: 40px;
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--accent-tint-10);
+        color: var(--color-accent-bright);
+        border: 1px solid var(--accent-tint-30);
+    }
+
+    .feature h3 {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 16px 0 6px;
+    }
+
+    .feature p {
+        font-size: 14px;
+        line-height: 1.55;
+        color: var(--text-secondary);
+        margin: 0;
+    }
+</style>

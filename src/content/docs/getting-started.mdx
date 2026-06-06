@@ -1,0 +1,59 @@
+---
+title: Installation
+description: Modrex is a desktop app for Windows and Linux. Download the build for your platform, install it, and launch - there's no account to create and nothing to configure to get started.
+---
+
+import Callout from '../../components/docs/Callout.astro'
+
+## Download & install
+
+Grab the latest release from the [download page](/#download) or directly from
+[GitHub Releases](https://github.com/modrexio/modrex/releases).
+
+### Windows
+
+Run the `Modrex_x64-setup.exe` installer and follow the prompts. Modrex checks for updates on
+every launch and can install them in-app - you won't need to manually reinstall for future versions.
+
+### Linux
+
+Pick the package for your distribution:
+
+- **`.deb`** - Debian, Ubuntu, and derivatives. Install with `sudo dpkg -i modrex_amd64.deb`.
+- **`.rpm`** - Fedora, RHEL, and derivatives. Install with `sudo rpm -i modrex_amd64.rpm`.
+- **`.AppImage`** - Any distribution. Mark the file executable (`chmod +x modrex.AppImage`) and run
+  it directly.
+
+## Game detection
+
+On first launch Modrex automatically scans for PAYDAY 3 across Steam, Epic Games, and the Xbox App.
+If it finds your install, you're ready to go.
+
+If detection fails, set the path manually:
+
+1. Open **Settings** from the bottom of the sidebar.
+2. Under **Game Path**, click **Browse** and select your PAYDAY 3 root folder.
+3. Modrex validates the path and identifies your launcher.
+
+<Callout>
+    The PAYDAY 3 root folder should contain a `PAYDAY3/Content/` subdirectory. On Steam this is
+    typically `SteamLibrary/steamapps/common/PAYDAY 3`.
+</Callout>
+
+## Launch options
+
+For most mods to work, PAYDAY 3 needs the `-fileopenlog` launch argument. Add it in
+**Settings - Launch Options**, or directly in your launcher's launch arguments for PAYDAY 3.
+
+<Callout>
+    If you install a mod and it doesn't appear in-game, a missing `-fileopenlog` argument is the
+    most common cause.
+</Callout>
+
+## Launcher support
+
+| Launcher   | Windows                                              | Linux                                                |
+| ---------- | ---------------------------------------------------- | ---------------------------------------------------- |
+| Steam      | ![yes](https://img.shields.io/badge/Yes-brightgreen) | ![yes](https://img.shields.io/badge/Yes-brightgreen) |
+| Epic Games | ![yes](https://img.shields.io/badge/Yes-brightgreen) | ![no](https://img.shields.io/badge/No-red)           |
+| Xbox App   | ![yes](https://img.shields.io/badge/Yes-brightgreen) | ![no](https://img.shields.io/badge/No-red)           |

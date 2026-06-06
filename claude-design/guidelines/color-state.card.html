@@ -1,0 +1,35 @@
+<!-- @dsCard group="Colors" viewport="700x170" name="State colors" subtitle="Danger · success · warning — deep fill, bright text" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="../styles.css" />
+<style>
+  body { margin: 0; padding: 20px; background: var(--color-surface); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .col { display: flex; flex-direction: column; gap: 8px; }
+  .fill { border-radius: var(--radius-sm); padding: 10px 12px; font-size: 12px; font-weight: 600; }
+  .pill { border-radius: var(--radius-sm); padding: 6px 10px; font-size: 12px; border: 1px solid; align-self: flex-start; }
+  .hex { font-family: var(--font-mono); font-size: 10px; color: var(--text-tertiary); }
+</style>
+</head>
+<body>
+  <div class="grid">
+    <div class="col">
+      <div class="fill" style="background:var(--color-danger); color:var(--color-danger-text)">Remove mod</div>
+      <div class="pill" style="color:var(--color-danger-text); border-color:var(--color-danger-hover); background:rgba(90,34,4,0.3)">Install failed</div>
+      <span class="hex">danger #5a2204 · text #fda578</span>
+    </div>
+    <div class="col">
+      <div class="fill" style="background:var(--color-success); color:var(--color-success-text)">Installed</div>
+      <div class="pill" style="color:var(--color-success-text); border-color:#0a5e2e; background:rgba(5,61,28,0.4)">You're up to date</div>
+      <span class="hex">success #053d1c · text #00df72</span>
+    </div>
+    <div class="col">
+      <div class="fill" style="background:var(--warning-tint-10); color:var(--color-warning); border:1px solid var(--warning-tint-30)">File missing</div>
+      <div class="pill" style="color:var(--color-warning); border-color:var(--warning-tint-30); background:var(--warning-tint-10)">Game not found</div>
+      <span class="hex">warning #facc15 (used at 10–30%)</span>
+    </div>
+  </div>
+</body>
+</html>

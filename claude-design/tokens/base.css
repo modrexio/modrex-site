@@ -1,0 +1,71 @@
+/* ============================================================
+   Modrex — base element defaults
+   Mirrors the app's global resets (cursor on buttons, custom
+   scrollbars) and sets the dark canvas + system-sans body.
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+/* Buttons and checkboxes get a pointer when enabled — from index.css */
+button:not(:disabled),
+input[type='checkbox']:not(:disabled) {
+    cursor: pointer;
+}
+
+/* The app's custom scrollbars — thin, surface-colored */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--color-surface-raised);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--color-surface-light);
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-subtle);
+}
+
+/* Selection picks up the accent */
+::selection {
+    background: var(--accent-tint-30);
+    color: var(--color-text);
+}
+
+a {
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: var(--transition-colors);
+}
+a:hover {
+    color: var(--color-accent-bright);
+}
+
+/* The MODREX wordmark — reusable helper.
+   <span class="modrex-wordmark">MOD<span>REX</span></span> */
+.modrex-wordmark {
+    font-family: var(--font-display);
+    letter-spacing: var(--tracking-display);
+    line-height: 1;
+    color: var(--color-text);
+}
+.modrex-wordmark > span {
+    color: var(--color-accent);
+}

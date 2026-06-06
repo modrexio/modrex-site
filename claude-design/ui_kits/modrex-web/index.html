@@ -1,0 +1,256 @@
+<!-- @dsCard group="Modrex Web" viewport="1280x900" name="Marketing landing" subtitle="Hero · features · download - modrex.io style" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Modrex - The PAYDAY 3 mod manager</title>
+<link rel="stylesheet" href="../../styles.css" />
+<script src="https://unpkg.com/lucide@0.544.0/dist/umd/lucide.min.js"></script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { background: var(--color-surface); color: var(--color-text); }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+
+  /* Subtle vignette / texture on the hero, no neon */
+  .hero {
+    position: relative;
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    overflow: hidden;
+  }
+
+  /* ---- Nav ---- */
+  nav.top {
+    position: sticky; top: 0; z-index: 40;
+    background: color-mix(in srgb, var(--color-surface) 86%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--color-border);
+  }
+  nav.top .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .nav-links { display: flex; align-items: center; gap: 28px; }
+  .nav-links a { color: var(--text-secondary); font-size: 14px; }
+  .nav-links a:hover { color: var(--color-text); }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+
+  /* ---- Hero ---- */
+  .hero-inner { padding: 72px 0 0; text-align: center; }
+  h1.hero-title {
+    font-family: var(--font-display); letter-spacing: 0.01em; line-height: 0.92;
+    font-size: 104px; margin: 24px 0 0; text-wrap: balance;
+  }
+  h1.hero-title .accent { color: var(--color-accent); }
+  .hero-sub {
+    max-width: 620px; margin: 22px auto 0; font-size: 18px; line-height: 1.6;
+    color: var(--text-secondary); text-wrap: pretty;
+  }
+  .cta-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 32px; flex-wrap: wrap; }
+  .hero-meta { margin-top: 16px; font-size: 13px; color: var(--text-tertiary); }
+  .hero-meta b { color: var(--text-secondary); font-weight: 600; }
+
+  /* CTA buttons (marketing-scale, built on DS tokens) */
+  .btn-lg {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 15px; font-weight: 600; padding: 12px 22px; border-radius: var(--radius-sm);
+    border: 1px solid transparent; transition: var(--transition-colors); cursor: pointer;
+  }
+  .btn-lg.primary { background: var(--color-accent); color: #fff; }
+  .btn-lg.primary:hover { background: var(--color-accent-bright); }
+  .btn-lg.secondary { background: var(--color-surface-hover); color: var(--color-text); border-color: var(--color-border); }
+  .btn-lg.secondary:hover { background: var(--color-surface-active); }
+  .btn-lg img { width: 18px; height: 18px; }
+
+  /* ---- App window mock ---- */
+  .shot-wrap { padding: 64px 0 0; perspective: 1600px; }
+  .window {
+    margin: 0 auto; max-width: 980px; border-radius: 12px; overflow: hidden;
+    border: 1px solid var(--color-border); background: var(--color-surface-raised);
+    box-shadow: 0 40px 100px -30px rgba(0,0,0,0.8);
+  }
+  .titlebar { display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px;
+    background: var(--color-surface); border-bottom: 1px solid var(--color-border); }
+  .titlebar .tb-name { font-size: 12px; color: var(--text-tertiary); margin-left: 10px; }
+  .titlebar .tb-ctrls { margin-left: auto; display: flex; gap: 18px; color: var(--text-tertiary); }
+  .window img { display: block; width: 100%; }
+
+  /* ---- Section scaffolding ---- */
+  section { padding: 96px 0; }
+  .sec-head { text-align: center; max-width: 640px; margin: 0 auto 56px; }
+  .sec-eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent-bright); }
+  h2.sec-title { font-family: var(--font-display); font-size: 56px; letter-spacing: 0.01em; line-height: 1; margin: 12px 0 0; }
+  .sec-sub { margin: 16px 0 0; font-size: 16px; color: var(--text-secondary); line-height: 1.6; }
+
+  /* ---- Features ---- */
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .feature {
+    background: var(--color-surface-raised); border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg); padding: 24px; transition: border-color var(--duration) var(--ease);
+  }
+  .feature:hover { border-color: var(--color-surface-light); }
+  .feature .ic {
+    width: 40px; height: 40px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    background: var(--accent-tint-10); color: var(--color-accent-bright); border: 1px solid var(--accent-tint-30);
+  }
+  .feature h3 { font-size: 16px; font-weight: 600; margin: 16px 0 6px; }
+  .feature p { font-size: 14px; line-height: 1.55; color: var(--text-secondary); margin: 0; }
+
+  /* ---- Download ---- */
+  #download { background: var(--color-surface-raised); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); }
+  .dl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 760px; margin: 0 auto; }
+  .dl-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 28px; }
+  .dl-card .os { display: flex; align-items: center; gap: 12px; }
+  .dl-card .os img { width: 26px; height: 26px; }
+  .dl-card .os h3 { font-size: 18px; margin: 0; font-weight: 600; }
+  .dl-card .files { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
+  .dl-file { display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    background: var(--color-surface-hover); border: 1px solid var(--color-border); border-radius: var(--radius-sm);
+    padding: 10px 14px; font-size: 14px; transition: var(--transition-colors); }
+  .dl-file:hover { background: var(--color-surface-active); }
+  .dl-file .fname { font-family: var(--font-mono); font-size: 13px; color: var(--color-text); }
+  .dl-file .fsize { font-size: 12px; color: var(--text-tertiary); }
+  .dl-note { text-align: center; margin-top: 32px; font-size: 14px; color: var(--text-tertiary); }
+  .dl-note a { color: var(--color-accent-bright); }
+
+  /* ---- Footer ---- */
+  footer { padding: 48px 0; border-top: 1px solid var(--color-border); }
+  footer .wrap { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  footer .links { display: flex; gap: 24px; }
+  footer .links a { font-size: 14px; color: var(--text-secondary); }
+  footer .links a:hover { color: var(--color-text); }
+  footer .legal { font-size: 12px; color: var(--text-tertiary); max-width: 420px; }
+  .ic-svg { width: 22px; height: 22px; }
+</style>
+</head>
+<body>
+  <!-- NAV -->
+  <nav class="top">
+    <div class="wrap">
+      <span class="modrex-wordmark" style="font-size:22px">MOD<span>REX</span></span>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#download">Download</a>
+        <a href="docs.html">Docs</a>
+        <a href="https://github.com/modrexio/modrex">GitHub</a>
+      </div>
+      <div class="nav-right">
+        <a href="#download" class="btn-lg primary" style="padding:8px 16px;font-size:13px">
+          <img id="nav-dl-icon" src="../../assets/icons/windows-white.svg" alt="" />Download
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="wrap hero-inner">
+      <h1 class="hero-title">THE PAYDAY 3<br /><span class="accent">MOD MANAGER</span></h1>
+      <p class="hero-sub">Browse, install, and organize mods from modworkshop - one click, no file juggling. Launch modded or vanilla straight from the app.</p>
+      <div class="cta-row">
+        <a href="#download" id="hero-dl" class="btn-lg primary"><img id="hero-dl-icon" src="../../assets/icons/windows-white.svg" alt="" /><span id="hero-dl-label">Download for Windows</span></a>
+      </div>
+      <p class="hero-meta"><a id="hero-other-os" href="#download" style="color:var(--text-secondary)">Using a different OS?</a> · Free &amp; open-source · <b>v0.9.1</b> · powered by <b>modworkshop</b></p>
+
+      <div class="shot-wrap">
+        <div class="window">
+          <div class="titlebar">
+            <span class="modrex-wordmark" style="font-size:14px">MOD<span>REX</span></span>
+            <span class="tb-name">Mod Manager</span>
+            <span class="tb-ctrls"><i data-lucide="minus" class="ic-svg" style="width:14px;height:14px"></i><i data-lucide="square" class="ic-svg" style="width:12px;height:12px"></i><i data-lucide="x" class="ic-svg" style="width:14px;height:14px"></i></span>
+          </div>
+          <img src="assets/app-shot.png" alt="Modrex browsing PAYDAY 3 mods" />
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-eyebrow">Everything in one place</span>
+        <h2 class="sec-title">Built for modding PAYDAY 3</h2>
+        <p class="sec-sub">No more dragging .pak files into folders by hand. Modrex handles discovery, install, updates, and launch - so you can get back to the heist.</p>
+      </div>
+      <div class="features" id="feature-grid"></div>
+    </div>
+  </section>
+
+  <!-- DOWNLOAD -->
+  <section id="download">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-eyebrow">Get Modrex</span>
+        <h2 class="sec-title">Download &amp; install</h2>
+        <p class="sec-sub">Grab the latest build for your platform. Auto-updates are built in - install once and Modrex keeps itself current.</p>
+      </div>
+      <div class="dl-grid">
+        <div class="dl-card">
+          <div class="os"><img src="../../assets/icons/windows-white.svg" alt="" /><h3>Windows</h3></div>
+          <div class="files">
+            <a class="dl-file"><span class="fname">Modrex_0.9.1_x64-setup.exe</span><span class="fsize">Installer</span></a>
+          </div>
+        </div>
+        <div class="dl-card">
+          <div class="os"><img src="../../assets/icons/linux-white.svg" alt="" /><h3>Linux</h3></div>
+          <div class="files">
+            <a class="dl-file"><span class="fname">modrex.deb</span><span class="fsize">Debian / Ubuntu</span></a>
+            <a class="dl-file"><span class="fname">modrex.rpm</span><span class="fsize">Fedora / RHEL</span></a>
+            <a class="dl-file"><span class="fname">modrex_0.9.1.AppImage</span><span class="fsize">Universal</span></a>
+          </div>
+        </div>
+      </div>
+      <p class="dl-note">Supports Steam, Epic Games &amp; Xbox launchers on Windows · Steam on Linux. See the <a href="docs.html">installation guide</a>.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="wrap">
+      <div>
+        <span class="modrex-wordmark" style="font-size:20px">MOD<span>REX</span></span>
+        <p class="legal" style="margin:10px 0 0">A free, open-source desktop mod manager for PAYDAY 3. Powered by modworkshop. Not affiliated with Starbreeze or Deep Silver.</p>
+      </div>
+      <div class="links">
+        <a href="https://github.com/modrexio/modrex">GitHub</a>
+        <a href="docs.html">Docs</a>
+        <a href="https://modworkshop.net/g/payday-3">modworkshop</a>
+        <a href="https://github.com/modrexio/modrex/issues">Report a bug</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // OS-aware primary download button
+    (function () {
+      const ua = navigator.userAgent || '';
+      const isLinux = /Linux|X11/.test(ua) && !/Android/.test(ua);
+      const os = isLinux ? 'Linux' : 'Windows';
+      const icon = isLinux ? '../../assets/icons/linux-white.svg' : '../../assets/icons/windows-white.svg';
+      const label = document.getElementById('hero-dl-label');
+      const iconEl = document.getElementById('hero-dl-icon');
+      const navIcon = document.getElementById('nav-dl-icon');
+      if (label) label.textContent = 'Download for ' + os;
+      if (iconEl) iconEl.src = icon;
+      if (navIcon) navIcon.src = icon;
+    })();
+
+    const FEATURES = [
+      ['compass', 'Browse modworkshop', 'Search the full PAYDAY 3 catalog with categories, sorting, and rich mod pages - images, changelogs, and dependencies.'],
+      ['download', 'One-click install', 'Install, enable, disable, and remove in a click. Supports .pak, .zip, and .7z, with multi-file mods grouped as one.'],
+      ['folder-tree', 'Organize in folders', 'Sort your library into nested folders of any depth, with drag-and-drop reordering that sticks.'],
+      ['refresh-cw', 'Smart updates', 'Modrex detects out-of-date mods and lets you update them selectively - or all at once.'],
+      ['play', 'Launch your way', 'Boot modded or vanilla straight from the app. Vanilla launches hide your mods and restore them on exit.'],
+      ['crosshair', 'Auto-detects your install', 'Finds PAYDAY 3 across Steam, Epic Games, and the Xbox App - and identifies stray .pak files by hash.'],
+    ];
+    const grid = document.getElementById('feature-grid');
+    grid.innerHTML = FEATURES.map(([icon, title, body]) => `
+      <div class="feature">
+        <div class="ic"><i data-lucide="${icon}"></i></div>
+        <h3>${title}</h3>
+        <p>${body}</p>
+      </div>`).join('');
+    lucide.createIcons();
+  </script>
+</body>
+</html>

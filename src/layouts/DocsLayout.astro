@@ -1,0 +1,44 @@
+---
+import BaseLayout from './BaseLayout.astro'
+import Nav from '../components/Nav.astro'
+import DocsSidebar from '../components/DocsSidebar.astro'
+import SiteFooter from '../components/SiteFooter.astro'
+import { NAV } from '../lib/docs-nav'
+
+interface Props {
+    title: string
+    description?: string
+}
+
+const { title, description } = Astro.props
+const currentPath = Astro.url.pathname
+const section = NAV.find((g) => g.items.some((i) => i.href === currentPath))?.label ?? 'Docs'
+---
+
+<BaseLayout title={title} {description}>
+    <Nav activePage="docs" />
+    <div class="wrap docs-grid">
+        <DocsSidebar currentPath={currentPath} />
+        <article class="doc-prose">
+            <p class="crumb">Docs / {section}</p>
+            <h1>{title}</h1>
+            {description && <p class="lead">{description}</p>}
+            <slot />
+        </article>
+    </div>
+    <SiteFooter />
+</BaseLayout>
+
+<style>
+    .docs-grid {
+        display: grid;
+        grid-template-columns: 232px 1fr;
+        gap: 48px;
+        padding: 48px 0 96px;
+        align-items: start;
+    }
+
+    article {
+        max-width: 720px;
+    }
+</style>

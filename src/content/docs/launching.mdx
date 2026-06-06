@@ -1,0 +1,30 @@
+---
+title: Launching the game
+description: Start PAYDAY 3 with your mods active, or launch a clean vanilla session directly from Modrex.
+---
+
+## Launch modded
+
+Click **Launch** in the top bar to start PAYDAY 3 with all enabled mods active. Modrex passes your
+configured launch options to the game and hands off to your launcher (Steam, Epic, or Xbox).
+
+Make sure `-fileopenlog` is in your launch options - without it most mods won't load. See
+[Installation](/docs/getting-started#launch-options) for details.
+
+## Launch without mods
+
+Click the dropdown arrow next to **Launch** and select **Launch without mods**. Modrex temporarily
+renames your `~mods/` folder to `~mods.bak/`, moving it outside the `Paks/` directory that Unreal
+Engine scans. The game starts with no mods at all.
+
+When PAYDAY 3 closes, Modrex automatically detects this and restores your `~mods/` folder.
+
+## Launcher support
+
+| Launcher   | Windows                                              | Linux                                                |
+| ---------- | ---------------------------------------------------- | ---------------------------------------------------- |
+| Steam      | ![yes](https://img.shields.io/badge/Yes-brightgreen) | ![yes](https://img.shields.io/badge/Yes-brightgreen) |
+| Epic Games | ![yes](https://img.shields.io/badge/Yes-brightgreen) | ![no](https://img.shields.io/badge/No-red)           |
+| Xbox App   | ![yes](https://img.shields.io/badge/Yes-brightgreen) | ![no](https://img.shields.io/badge/No-red)           |
+
+To override the detected launcher, go to **Settings - Launcher** and select one manually.

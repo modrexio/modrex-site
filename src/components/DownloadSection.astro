@@ -1,0 +1,253 @@
+---
+import type { Release } from '../lib/github'
+
+interface Props {
+    release: Release | null
+}
+const { release } = Astro.props
+
+function formatSize(bytes: number): string {
+    const mb = bytes / (1024 * 1024)
+    return mb >= 1 ? `${mb.toFixed(1)} MB` : `${(bytes / 1024).toFixed(0)} KB`
+}
+
+type DlFile = { name: string; url: string; label: string; size?: string }
+
+const exeAsset = release?.assets.find((a) => a.name.endsWith('.exe'))
+const appImageAsset = release?.assets.find((a) => a.name.endsWith('.AppImage'))
+const debAsset = release?.assets.find((a) => a.name.endsWith('.deb'))
+const rpmAsset = release?.assets.find((a) => a.name.endsWith('.rpm'))
+
+const fallbackUrl = 'https://github.com/modrexio/modrex/releases/latest'
+
+const windowsFiles: DlFile[] = exeAsset
+    ? [
+          {
+              name: exeAsset.name,
+              url: exeAsset.browser_download_url,
+              label: 'Installer',
+              size: formatSize(exeAsset.size),
+          },
+      ]
+    : [{ name: 'Modrex_x64-setup.exe', url: fallbackUrl, label: 'Installer' }]
+
+const linuxFiles: DlFile[] = [
+    debAsset
+        ? {
+              name: debAsset.name,
+              url: debAsset.browser_download_url,
+              label: 'Debian / Ubuntu',
+              size: formatSize(debAsset.size),
+          }
+        : { name: 'modrex_amd64.deb', url: fallbackUrl, label: 'Debian / Ubuntu' },
+    rpmAsset
+        ? {
+              name: rpmAsset.name,
+              url: rpmAsset.browser_download_url,
+              label: 'Fedora / RHEL',
+              size: formatSize(rpmAsset.size),
+          }
+        : { name: 'modrex_amd64.rpm', url: fallbackUrl, label: 'Fedora / RHEL' },
+    appImageAsset
+        ? {
+              name: appImageAsset.name,
+              url: appImageAsset.browser_download_url,
+              label: 'Universal',
+              size: formatSize(appImageAsset.size),
+          }
+        : { name: 'modrex.AppImage', url: fallbackUrl, label: 'Universal' },
+]
+---
+
+<section id="download">
+    <div class="wrap">
+        <div class="sec-head">
+            <span class="sec-eyebrow">Get Modrex</span>
+            <h2 class="sec-title">Download &amp; install</h2>
+            <p class="sec-sub">
+                Grab the latest build for your platform. Auto-updates are built in - install once
+                and Modrex keeps itself current.
+            </p>
+        </div>
+        <div class="dl-grid">
+            <div class="dl-card" id="dl-card-win">
+                <div class="os-header">
+                    <img src="/icons/windows-white.svg" alt="" width="26" height="26" />
+                    <h3>Windows</h3>
+                    <span class="os-badge" id="badge-win">Your OS</span>
+                </div>
+                <div class="files">
+                    {
+                        windowsFiles.map((f) => (
+                            <div class="dl-file">
+                                <span class="fname">.{f.name.split('.').pop()}</span>
+                                {f.size && <span class="fsize">{f.size}</span>}
+                                <a class="dl-btn" href={f.url}>
+                                    <i data-lucide="download" />
+                                    Install
+                                </a>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
+            <div class="dl-card" id="dl-card-lin">
+                <div class="os-header">
+                    <img src="/icons/linux-white.svg" alt="" width="26" height="26" />
+                    <h3>Linux</h3>
+                    <span class="os-badge" id="badge-lin">Your OS</span>
+                </div>
+                <div class="files">
+                    {
+                        linuxFiles.map((f) => (
+                            <div class="dl-file">
+                                <span class="fname">.{f.name.split('.').pop()}</span>
+                                {f.size && <span class="fsize">{f.size}</span>}
+                                <a class="dl-btn" href={f.url}>
+                                    <i data-lucide="download" />
+                                    Install
+                                </a>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
+        </div>
+        <p class="dl-note">
+            Supports Steam, Epic Games &amp; Xbox launchers on Windows · Steam on Linux. See the
+            <a href="/docs/getting-started">installation guide</a>.
+        </p>
+    </div>
+</section>
+
+<script>
+    import { createIcons, Download } from 'lucide'
+    createIcons({ icons: { Download } })
+
+    const isLinux = /Linux|X11/.test(navigator.userAgent) && !/Android/.test(navigator.userAgent)
+    const cardId = isLinux ? 'dl-card-lin' : 'dl-card-win'
+    const badgeId = isLinux ? 'badge-lin' : 'badge-win'
+    document.getElementById(cardId)?.classList.add('os-match')
+    const badge = document.getElementById(badgeId)
+    if (badge) badge.style.display = 'inline-block'
+</script>
+
+<style>
+    #download {
+        background: var(--color-surface-raised);
+        border-top: 1px solid var(--color-border);
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .dl-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        max-width: 760px;
+        margin: 0 auto;
+    }
+
+    .dl-card {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        padding: 28px;
+    }
+
+    .dl-card.os-match {
+        border-color: var(--color-accent);
+        box-shadow: 0 0 0 1px var(--color-accent);
+    }
+
+    .os-badge {
+        display: none;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--color-accent);
+        background: color-mix(in srgb, var(--color-accent) 15%, transparent);
+        border: 1px solid color-mix(in srgb, var(--color-accent) 40%, transparent);
+        border-radius: 4px;
+        padding: 2px 8px;
+    }
+
+    .os-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .os-header h3 {
+        font-size: 18px;
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .files {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 20px;
+    }
+
+    .dl-file {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--color-surface-hover);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-sm);
+        padding: 10px 14px;
+    }
+
+    .fname {
+        flex: 1;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--color-text);
+        word-break: break-all;
+    }
+
+    .fsize {
+        font-size: 11px;
+        color: var(--text-tertiary);
+        background: var(--color-surface-active);
+        padding: 2px 6px;
+        border-radius: var(--radius-sm);
+    }
+
+    .dl-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        background: var(--color-accent);
+        color: #fff;
+        border-radius: var(--radius-sm);
+        font-size: 13px;
+        font-weight: 500;
+        flex-shrink: 0;
+        transition: background 0.15s ease;
+    }
+
+    .dl-btn svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .dl-btn:hover {
+        background: var(--color-accent-bright);
+    }
+
+    .dl-note {
+        text-align: center;
+        margin-top: 32px;
+        font-size: 14px;
+        color: var(--text-tertiary);
+    }
+
+    .dl-note a {
+        color: var(--color-accent-bright);
+    }
+</style>

@@ -1,0 +1,43 @@
+---
+title: Settings
+description: Reference for all configurable options in Modrex.
+---
+
+## Game Path
+
+The absolute path to your PAYDAY 3 installation root - the folder containing `PAYDAY3/Content/`.
+Modrex auto-detects this on first launch by scanning known launcher locations.
+
+Click **Browse** to set it manually. Modrex validates the path and identifies your launcher when
+you save.
+
+## Launcher
+
+Override the auto-detected launcher. Options: **Steam**, **Epic Games**, **Xbox App**. Modrex uses
+this to determine how to start PAYDAY 3 when you click Launch.
+
+## Launch Options
+
+Command-line arguments appended to every game launch. Add `-fileopenlog` here if mods aren't
+loading - most mods require it for Unreal Engine to scan the mods directory.
+
+## Skip warnings
+
+Checkboxes to suppress specific one-time warnings:
+
+- **Skip file-open log warning** - hides the reminder to add `-fileopenlog` if it's already set.
+- **Dismissed dependency warnings** - per-mod list of dependency warnings you've acknowledged.
+
+Re-enable any warning by unchecking it here.
+
+## App data locations
+
+Modrex stores its state and settings in the following locations:
+
+| Platform | Path                |
+| -------- | ------------------- |
+| Windows  | `%APPDATA%\Modrex\` |
+| Linux    | `~/.config/modrex/` |
+
+The mod state file (`.pd3mm.json`) lives inside your game's `~mods/` folder so it travels with the
+game directory on dual-boot setups.

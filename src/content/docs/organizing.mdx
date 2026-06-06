@@ -1,0 +1,42 @@
+---
+title: Organizing mods
+description: Use folders and priority ordering to control which mods load and in what order.
+---
+
+import Callout from '../../components/docs/Callout.astro'
+
+## Folders
+
+Create folders on the **Installed** tab to group related mods. Folders can be nested to any depth.
+
+- **Create a folder** - click the folder icon in the toolbar, or right-click an existing folder and
+  select **New subfolder**.
+- **Move a mod into a folder** - drag it from the list and drop it onto the folder name.
+- **Rename or delete** - right-click the folder.
+
+Deleting a folder moves its contents to the parent level; the mod files are not removed from disk.
+
+## Priority order
+
+PAYDAY 3 uses Unreal Engine 5, which loads `.pak` files alphabetically. Modrex translates your
+visual order into numeric prefixes (`001_`, `002_`, ...) on the actual filenames on disk.
+
+**Higher in the list = lower priority. Lower in the list = higher priority = loads last = wins
+conflicts.**
+
+Drag mods up and down within the list to reorder them. Priority is scoped to siblings within the
+same folder - mods in different folders don't compete unless they reference the same game assets.
+
+<Callout>
+    If two mods modify the same asset and you're getting the wrong one in-game, swap their positions
+    in the list.
+</Callout>
+
+## Bulk enable / disable
+
+Click the toggle on a folder's header row to enable or disable every mod inside it at once,
+including nested subfolders. Individual mod toggles still work inside a collapsed folder.
+
+## Collapse and expand
+
+Click a folder name to collapse or expand it. Collapsed state is saved between sessions.

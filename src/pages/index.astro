@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Nav from '../components/Nav.astro'
+import Hero from '../components/Hero.astro'
+import Features from '../components/Features.astro'
+import DownloadSection from '../components/DownloadSection.astro'
+import SiteFooter from '../components/SiteFooter.astro'
+import { getLatestRelease } from '../lib/github'
+import type { Release } from '../lib/github'
+
+let release: Release | null = null
+try {
+    release = await getLatestRelease()
+} catch {
+    // GitHub API unavailable at build time — release data optional
+}
+---
+
+<BaseLayout title="Modrex">
+    <Nav release={release} />
+    <Hero release={release} />
+    <Features />
+    <DownloadSection release={release} />
+    <SiteFooter />
+</BaseLayout>

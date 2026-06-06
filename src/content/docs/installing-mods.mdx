@@ -1,0 +1,51 @@
+---
+title: Installing mods
+description: Install mods from modworkshop with one click, or drop in local files from your filesystem.
+---
+
+import Callout from '../../components/docs/Callout.astro'
+
+## From Browse
+
+The **Browse** tab shows the full PAYDAY 3 mod catalog on modworkshop. Click any mod to open its
+detail page, then click **Install**. Modrex downloads the file, extracts it if needed, and places
+it in the correct location automatically.
+
+Supported file formats: `.pak`, `.zip`, `.7z`, `.tar.gz`, `.tar.xz`.
+
+### Multi-file mods
+
+Some mods ship multiple `.pak` files inside a single archive. When Modrex detects this, it opens a
+picker so you can choose which files to install. All files are pre-selected by default - deselect
+any you don't want.
+
+### External links
+
+If a mod's download is hosted outside modworkshop (external link), Modrex shows a warning and opens
+the link in your browser. Download the file manually, then install it from a local file.
+
+## From a local file
+
+Drag a `.pak`, `.zip`, or `.7z` file onto the **Installed** tab, or click **Install from file** in
+the top bar. Modrex handles extraction and placement the same way as a Browse install.
+
+## Enable and disable
+
+Toggle the switch next to any mod to enable or disable it without uninstalling. Disabled mods are
+moved to a `disabled/` subfolder with a `.disabled` extension - they're preserved on disk but the
+game ignores them.
+
+## Uninstalling
+
+Right-click a mod and select **Uninstall**, or use the context menu. The `.pak` file is deleted from
+disk and the mod is removed from Modrex's state.
+
+<Callout>
+    Uninstalling is permanent. If you want to keep the file but stop using the mod, disable it
+    instead.
+</Callout>
+
+## Reinstalling / updating
+
+Click **Reinstall** on a mod to re-download and replace its current file. For bulk updates, see the
+[updating mods](/docs/updating) guide.

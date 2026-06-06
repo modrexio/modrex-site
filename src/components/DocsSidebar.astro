@@ -1,0 +1,61 @@
+---
+import { NAV } from '../lib/docs-nav'
+
+interface Props {
+    currentPath: string
+}
+const { currentPath } = Astro.props
+---
+
+<aside class="toc">
+    {
+        NAV.map((group) => (
+            <div class="toc-group">
+                <h4>{group.label}</h4>
+                {group.items.map((item) => (
+                    <a href={item.href} class:list={[{ current: currentPath === item.href }]}>
+                        {item.title}
+                    </a>
+                ))}
+            </div>
+        ))
+    }
+</aside>
+
+<style>
+    .toc {
+        position: sticky;
+        top: 96px;
+    }
+
+    .toc-group {
+        margin-bottom: 24px;
+    }
+
+    .toc-group h4 {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-tertiary);
+        margin: 0 0 10px;
+        font-weight: 600;
+    }
+
+    .toc-group a {
+        display: block;
+        font-size: 14px;
+        color: var(--text-secondary);
+        padding: 5px 0;
+        transition: var(--transition-colors);
+        text-decoration: none;
+    }
+
+    .toc-group a:hover {
+        color: var(--color-text);
+    }
+
+    .toc-group a.current {
+        color: var(--color-accent-bright);
+        font-weight: 500;
+    }
+</style>
