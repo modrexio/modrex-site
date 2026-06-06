@@ -97,7 +97,7 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
     let animating = false
 
     function cardW() {
-        return outer.offsetWidth * 0.74
+        return cards[REAL_FIRST].offsetWidth
     }
 
     function offsetFor(index: number) {
@@ -292,13 +292,37 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
         }
 
         .shot-row {
-            gap: 8px;
-            padding-bottom: 32px;
+            position: relative;
+            gap: 0;
+            padding-bottom: 0;
+            margin-bottom: 32px;
+        }
+
+        .shot-card {
+            flex: 0 0 88%;
         }
 
         .nav-btn {
-            width: 40px;
-            height: 40px;
+            position: absolute;
+            z-index: 10;
+            width: 36px;
+            height: 36px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(6px);
+            border-color: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        #hero-prev {
+            left: 6%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #hero-next {
+            right: 6%;
+            top: 50%;
+            transform: translate(50%, -50%);
         }
     }
 </style>
