@@ -39,7 +39,7 @@ src/styles/tokens/             ← design tokens (colors, typography, spacing, c
 
 ### Styling rules
 
-- All colors are CSS custom properties defined in `src/styles/tokens/colors.css` via Tailwind v4's `@theme`. Never use hardcoded Tailwind color classes (`zinc-*`, `red-*`, etc.). Token names: `surface`, `surface-raised`, `surface-hover`, `surface-active`, `border`, `text`, `text-muted`, `accent`, `accent-bright`, `danger`, `success`, `warning`.
+- All colors are CSS custom properties defined in `src/styles/tokens/colors.css` via Tailwind v4's `@theme`. Never use hardcoded Tailwind color classes (`zinc-*`, `red-*`, etc.). Token names: `surface`, `surface-raised`, `surface-hover`, `surface-active`, `border`, `text`, `text-muted`, `accent`, `accent-bright`, `danger`, `success`, `warning`. Tint variables (raw CSS props, not Tailwind classes): `--accent-tint-10/20/30`, `--warning-tint-10/30`, `--scrim` (modal backdrop `rgba(0,0,0,0.6)`).
 - Tailwind is loaded via `@tailwindcss/vite` plugin (not `@astrojs/tailwind`).
 - `fonts.css` must be imported **before** `@import 'tailwindcss'` in `global.css` to avoid PostCSS ordering errors with Google Fonts `@import url()`.
 - Shared layout utilities (`.wrap`, `.btn-lg`, `.sec-head`, `.doc-prose`) live in `global.css`. Component-specific styles use Astro scoped `<style>` blocks.
@@ -86,6 +86,7 @@ At `≤768px`, `.nav-links` and `.nav-right` are hidden and a hamburger button a
 ### Docs
 
 - Nav structure is in `src/lib/docs-nav.ts` — update this when adding/removing doc pages.
+- `src/components/docs/Callout.astro` is the only custom MDX component. Import and use it in MDX pages as `<Callout>` (default `type="info"`) or `<Callout type="warning">`. It must be imported at the top of each MDX file that uses it.
 - `src/pages/docs/index.astro` redirects to `/docs/getting-started`.
 - `src/pages/docs/[...slug].astro` renders all MDX pages using Astro's content layer `render()` API.
 - `DocsLayout` renders `h1` from `title` and lead paragraph from `description` frontmatter — don't repeat these inside the MDX body.
@@ -95,6 +96,12 @@ At `≤768px`, `.nav-links` and `.nav-right` are hidden and a hamburger button a
 ### Hero gallery
 
 5-slot infinite carousel in `Hero.astro`: `[clone-last, real0, real1, real2, clone-first]`. The snap-reset technique — when landing on a clone, `snapTo()` teleports to the real equivalent. During snap, both `track.style.transition` and all `card.style.transition` are set to `'none'` to prevent the blink. The `transitionend` listener filters `e.target !== track || e.propertyName !== 'transform'` to avoid premature firing from child card transitions bubbling up. Card width is `74%` of `gallery-outer`'s width at all viewport sizes — the JS `cardW()` and CSS `flex: 0 0 74%` stay in sync.
+
+## Agent skills
+
+Reusable skills live in `.agents/skills/` and are listed in `AGENTS.md`. Available as Claude Code slash commands:
+
+- `/commit` — read the current diff and propose a conventional commit message; waits for confirmation before committing.
 
 ## Rules
 
