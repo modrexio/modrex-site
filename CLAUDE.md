@@ -49,7 +49,7 @@ src/styles/tokens/             ← design tokens (colors, typography, spacing, c
 
 - `768px` — nav switches to hamburger, docs sidebar stacks above article, `.wrap` padding shrinks to `16px`
 - `860px` / `500px` — features grid: 3-col → 2-col → 1-col
-- `640px` — hero inner padding/font size reductions, download section 2-col → 1-col, gallery nav button size
+- `640px` — hero inner padding/font size reductions, download section 2-col → 1-col, gallery nav buttons switch to absolute overlays on the card edges
 - `480px` — section title and doc prose `h1` font size floor (`32px`)
 
 ### OS detection
@@ -113,7 +113,7 @@ At `≤768px`, `.nav-links` and `.nav-right` are hidden and a hamburger button a
 
 ### Hero gallery
 
-5-slot infinite carousel in `Hero.astro`: `[clone-last, real0, real1, real2, clone-first]`. The snap-reset technique — when landing on a clone, `snapTo()` teleports to the real equivalent. During snap, both `track.style.transition` and all `card.style.transition` are set to `'none'` to prevent the blink. The `transitionend` listener filters `e.target !== track || e.propertyName !== 'transform'` to avoid premature firing from child card transitions bubbling up. Card width is `74%` of `gallery-outer`'s width at all viewport sizes — the JS `cardW()` and CSS `flex: 0 0 74%` stay in sync.
+5-slot infinite carousel in `Hero.astro`: `[clone-last, real0, real1, real2, clone-first]`. The snap-reset technique — when landing on a clone, `snapTo()` teleports to the real equivalent. During snap, both `track.style.transition` and all `card.style.transition` are set to `'none'` to prevent the blink. The `transitionend` listener filters `e.target !== track || e.propertyName !== 'transform'` to avoid premature firing from child card transitions bubbling up. Card width is `74%` on desktop (`flex: 0 0 74%`) and `88%` on mobile (`flex: 0 0 88%`). The JS `cardW()` reads the actual rendered width from the DOM (`cards[REAL_FIRST].offsetWidth`) so it always matches whatever the CSS sets — no hardcoded ratio to keep in sync. On mobile (`≤640px`), the nav buttons are `position: absolute` overlays centered on the left/right edges of the active card (`left/right: 6%` — derived from `(100% - 88%) / 2`).
 
 ## Agent skills
 
