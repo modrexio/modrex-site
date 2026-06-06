@@ -66,4 +66,3 @@ Lucide icons via the `lucide` package (not `lucide-react`). In each component th
 
 - Never run any git command that touches the remote (push, force push). Write out the command for the user to run.
 - Commit messages must follow conventional commits — enforced by `commitlint.config.ts`.
-- `claude-design/` contains the original HTML prototypes — never modify it.
