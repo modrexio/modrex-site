@@ -42,6 +42,19 @@ const ogImage = new URL('/logo.png', Astro.site).href
         <title>{pageTitle}</title>
         <link rel="icon" href="/favicon.ico" />
         <slot name="head" />
+
+        <!-- Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-51PXP0HVZD" is:inline
+        ></script>
+        <script is:inline>
+            window.dataLayer = window.dataLayer || []
+            // eslint-disable-next-line prefer-rest-params
+            function gtag() {
+                dataLayer.push(arguments)
+            }
+            gtag('js', new Date())
+            gtag('config', 'G-51PXP0HVZD')
+        </script>
     </head>
     <body>
         <slot />
