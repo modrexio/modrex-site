@@ -21,7 +21,8 @@
     --color-text-subtle: #71717a; /* tertiary, meta, placeholders, icons */
 
     /* --- Accent: the Modrex orange. The one loud color. --- */
-    --color-accent: #e36300; /* primary buttons, active nav, links */
+    --color-accent: #c45500; /* primary buttons, active nav, links */
+    --color-accent-fill-hover: #b84d00; /* hover fill that keeps white text AA */
     --color-accent-bright: #f87d36; /* accent hover, wordmark "REX", emphasis */
 
     /* --- Danger: deep burnt-red fills with a light readable text --- */
@@ -56,9 +57,9 @@
 
     /* Tinted backgrounds: accent / state colors at low alpha over dark.
        The app uses /10, /20, /30 tailwind alpha steps constantly. */
-    --accent-tint-10: rgba(227, 99, 0, 0.1);
-    --accent-tint-20: rgba(227, 99, 0, 0.2);
-    --accent-tint-30: rgba(227, 99, 0, 0.3);
+    --accent-tint-10: rgba(196, 85, 0, 0.1);
+    --accent-tint-20: rgba(196, 85, 0, 0.2);
+    --accent-tint-30: rgba(196, 85, 0, 0.3);
     --warning-tint-10: rgba(250, 204, 21, 0.1);
     --warning-tint-30: rgba(250, 204, 21, 0.3);
     --scrim: rgba(0, 0, 0, 0.6); /* modal backdrop */

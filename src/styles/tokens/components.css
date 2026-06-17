@@ -33,7 +33,7 @@
     color: var(--on-accent);
 }
 .mdx-btn--primary:hover:not(:disabled) {
-    background: var(--color-accent-bright);
+    background: var(--color-accent-fill-hover);
 }
 .mdx-btn--secondary {
     background: var(--color-surface-hover);

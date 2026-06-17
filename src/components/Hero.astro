@@ -1,13 +1,4 @@
 ---
-import type { Release } from '../lib/github'
-
-interface Props {
-    release: Release | null
-}
-const { release } = Astro.props
-const version = release?.tag_name?.replace(/^v/, '') ?? null
-const metaParts = ['Free & open-source', version ? `v${version}` : null].filter(Boolean)
-
 const shots = [
     { src: '/browse-mods.png', alt: 'Browse mods' },
     { src: '/installed%20mods.png', alt: 'Installed mods' },
@@ -40,7 +31,7 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
                 <a href="/#download" class="btn-lg secondary other-platforms">Other platforms</a>
             </div>
             <p class="hero-meta">
-                {metaParts.join(' · ')} · powered by
+                Free and open source. Powered by
                 <a href="https://modworkshop.net" target="_blank" rel="noopener">modworkshop</a>
             </p>
         </div>
@@ -150,7 +141,8 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
     // init position (no animation)
     snapTo(REAL_FIRST)
 
-    window.addEventListener('resize', () => snapTo(slotIndex))
+    const resizeObserver = new ResizeObserver(() => snapTo(slotIndex))
+    resizeObserver.observe(outer)
 </script>
 
 <style>
@@ -180,11 +172,12 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
     }
 
     .hero-sub {
-        max-width: 620px;
+        width: min(100%, 620px);
         margin: 22px auto 0;
         font-size: 18px;
         line-height: 1.6;
         color: var(--text-secondary);
+        overflow-wrap: break-word;
     }
 
     .cta-row {
@@ -288,8 +281,24 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
             padding: 40px 0 28px;
         }
 
+        .hero-title {
+            font-size: clamp(46px, 13vw, 64px);
+        }
+
         .hero-sub {
             font-size: 16px;
+        }
+
+        .cta-row {
+            width: min(100%, 320px);
+            margin-right: auto;
+            margin-left: auto;
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .cta-row .btn-lg {
+            width: 100%;
         }
 
         .shot-row {

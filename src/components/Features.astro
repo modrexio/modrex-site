@@ -47,7 +47,6 @@ const features: [string, string, string][] = [
 <section id="features">
     <div class="wrap">
         <div class="sec-head">
-            <span class="sec-eyebrow">Everything in one place</span>
             <h2 class="sec-title">Built for PAYDAY modding</h2>
             <p class="sec-sub">
                 No more dragging files into game folders by hand. Modrex handles discovery, install,
@@ -87,11 +86,12 @@ const features: [string, string, string][] = [
 <style>
     .features-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 16px;
     }
 
     .feature {
+        grid-column: span 1;
         background: var(--color-surface-raised);
         border: 1px solid var(--color-border);
         border-radius: var(--radius-lg);
@@ -101,6 +101,13 @@ const features: [string, string, string][] = [
 
     .feature:hover {
         border-color: var(--color-surface-light);
+    }
+
+    .feature:nth-child(-n + 2) {
+        grid-column: span 2;
+        background:
+            linear-gradient(135deg, var(--accent-tint-10), transparent 48%),
+            var(--color-surface-raised);
     }
 
     .ic {
@@ -164,6 +171,11 @@ const features: [string, string, string][] = [
     @media (max-width: 860px) {
         .features-grid {
             grid-template-columns: repeat(2, 1fr);
+        }
+
+        .feature,
+        .feature:nth-child(-n + 2) {
+            grid-column: span 1;
         }
     }
 

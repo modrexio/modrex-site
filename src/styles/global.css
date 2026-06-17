@@ -53,6 +53,7 @@ h2.sec-title {
 .btn-lg {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     font-size: 15px;
     font-weight: 600;
@@ -62,6 +63,7 @@ h2.sec-title {
     transition: var(--transition-colors);
     cursor: pointer;
     text-decoration: none;
+    white-space: nowrap;
 }
 
 .btn-lg.primary {
@@ -70,7 +72,7 @@ h2.sec-title {
 }
 
 .btn-lg.primary:hover {
-    background: var(--color-accent-bright);
+    background: var(--color-accent-fill-hover);
     color: #fff;
 }
 
