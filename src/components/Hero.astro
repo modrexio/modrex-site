@@ -56,11 +56,43 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
             </button>
         </div>
     </div>
+
+    <div class="image-viewer" id="image-viewer" aria-hidden="true">
+        <button class="viewer-backdrop" id="viewer-backdrop" type="button" aria-label="Close image">
+        </button>
+        <div class="viewer-panel" role="dialog" aria-modal="true" aria-label="Screenshot preview">
+            <button class="viewer-close" id="viewer-close" type="button" aria-label="Close image">
+                <i data-lucide="x"></i>
+            </button>
+            <button
+                class="viewer-nav"
+                id="viewer-prev"
+                type="button"
+                aria-label="Previous screenshot"
+            >
+                <i data-lucide="chevron-left"></i>
+            </button>
+            <div class="viewer-outer" id="viewer-outer">
+                <div class="viewer-track" id="viewer-track">
+                    {
+                        slots.map((s, i) => (
+                            <div class:list={['viewer-card', { active: i === 1 }]}>
+                                <img src={s.src} alt={s.alt} width="1180" />
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
+            <button class="viewer-nav" id="viewer-next" type="button" aria-label="Next screenshot">
+                <i data-lucide="chevron-right"></i>
+            </button>
+        </div>
+    </div>
 </header>
 
 <script>
-    import { createIcons, ChevronLeft, ChevronRight } from 'lucide'
-    createIcons({ icons: { ChevronLeft, ChevronRight } })
+    import { createIcons, ChevronLeft, ChevronRight, X } from 'lucide'
+    createIcons({ icons: { ChevronLeft, ChevronRight, X } })
 
     const isMobile =
         /Android|iPhone|iPad|iPod/.test(navigator.userAgent) ||
@@ -81,11 +113,19 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
     const outer = document.getElementById('hero-outer')!
     const track = document.getElementById('hero-track')!
     const cards = Array.from(track.querySelectorAll<HTMLElement>('.shot-card'))
+    const hero = document.querySelector('.hero')!
+    const viewer = document.getElementById('image-viewer')!
+    const viewerOuter = document.getElementById('viewer-outer')!
+    const viewerTrack = document.getElementById('viewer-track')!
+    const viewerCards = Array.from(viewerTrack.querySelectorAll<HTMLElement>('.viewer-card'))
     // slots: [clone-last(0), real0(1), real1(2), real2(3), clone-first(4)]
     const REAL_FIRST = 1
     const REAL_LAST = 3
+    const realCards = cards.slice(REAL_FIRST, REAL_LAST + 1)
     const GAP = 16
     let slotIndex = REAL_FIRST // start centered on slot 1 (shots[0])
+    let viewerSlotIndex = REAL_FIRST
+    let viewerAnimating = false
     let animating = false
 
     function cardW() {
@@ -98,6 +138,10 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
 
     function setActive(index: number) {
         cards.forEach((c, i) => c.classList.toggle('active', i === index))
+    }
+
+    function setViewerActive(index: number) {
+        viewerCards.forEach((c, i) => c.classList.toggle('active', i === index))
     }
 
     function snapTo(index: number) {
@@ -133,16 +177,92 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
         track.addEventListener('transitionend', onEnd)
     }
 
+    function viewerCardW() {
+        return viewerCards[REAL_FIRST].offsetWidth
+    }
+
+    function viewerOffsetFor(index: number) {
+        return (viewerOuter.offsetWidth - viewerCardW()) / 2 - index * (viewerCardW() + GAP)
+    }
+
+    function viewerSnapTo(index: number) {
+        viewerTrack.style.transition = 'none'
+        viewerCards.forEach((c) => (c.style.transition = 'none'))
+        viewerSlotIndex = index
+        viewerTrack.style.transform = `translateX(${viewerOffsetFor(index)}px)`
+        setViewerActive(index)
+        snapTo(index)
+        requestAnimationFrame(() =>
+            requestAnimationFrame(() => {
+                viewerTrack.style.transition = ''
+                viewerCards.forEach((c) => (c.style.transition = ''))
+            })
+        )
+    }
+
+    function openViewer(card: HTMLElement, index: number) {
+        if (!card.classList.contains('active')) return
+        viewer.classList.add('open')
+        hero.classList.add('viewer-open')
+        viewer.setAttribute('aria-hidden', 'false')
+        document.body.style.overflow = 'hidden'
+        viewerSnapTo(REAL_FIRST + index)
+        document.getElementById('viewer-close')?.focus()
+    }
+
+    function closeViewer() {
+        viewer.classList.remove('open')
+        hero.classList.remove('viewer-open')
+        viewer.setAttribute('aria-hidden', 'true')
+        document.body.style.overflow = ''
+    }
+
+    function stepViewer(dir: number) {
+        if (viewerAnimating) return
+        viewerAnimating = true
+        const next = viewerSlotIndex + dir
+        viewerSlotIndex = next
+        setViewerActive(next)
+        viewerTrack.style.transform = `translateX(${viewerOffsetFor(next)}px)`
+
+        function onEnd(e: TransitionEvent) {
+            if (e.target !== viewerTrack || e.propertyName !== 'transform') return
+            viewerTrack.removeEventListener('transitionend', onEnd)
+            if (next === 0) viewerSnapTo(REAL_LAST)
+            else if (next === viewerCards.length - 1) viewerSnapTo(REAL_FIRST)
+            else snapTo(next)
+            viewerAnimating = false
+        }
+        viewerTrack.addEventListener('transitionend', onEnd)
+    }
+
     document.getElementById('hero-prev')!.addEventListener('click', () => go(-1))
     document.getElementById('hero-next')!.addEventListener('click', () => go(1))
     cards[0].addEventListener('click', () => go(-1))
     cards[cards.length - 1].addEventListener('click', () => go(1))
+    realCards.forEach((card, index) =>
+        card.addEventListener('click', () => openViewer(card, index))
+    )
+    document.getElementById('viewer-close')!.addEventListener('click', closeViewer)
+    document.getElementById('viewer-backdrop')!.addEventListener('click', closeViewer)
+    document.getElementById('viewer-prev')!.addEventListener('click', () => stepViewer(-1))
+    document.getElementById('viewer-next')!.addEventListener('click', () => stepViewer(1))
+    document.addEventListener('keydown', (event) => {
+        if (!viewer.classList.contains('open')) return
+        if (event.key === 'Escape') closeViewer()
+        if (event.key === 'ArrowLeft') stepViewer(-1)
+        if (event.key === 'ArrowRight') stepViewer(1)
+    })
 
     // init position (no animation)
     snapTo(REAL_FIRST)
 
     const resizeObserver = new ResizeObserver(() => snapTo(slotIndex))
     resizeObserver.observe(outer)
+    const viewerResizeObserver = new ResizeObserver(() => {
+        if (viewer.classList.contains('open')) viewerSnapTo(viewerSlotIndex)
+    })
+    viewerResizeObserver.observe(viewerOuter)
 </script>
 
 <style>
@@ -237,7 +357,7 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
         opacity: 1;
         transform: scale(1);
         box-shadow: 0 32px 80px -20px rgba(0, 0, 0, 0.8);
-        cursor: default;
+        cursor: zoom-in;
     }
 
     .shot-card img {
@@ -274,6 +394,132 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
         background: var(--color-surface-active);
         border-color: var(--color-accent);
         color: var(--color-accent);
+    }
+
+    .hero.viewer-open .shot-row > .nav-btn {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .image-viewer {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+    }
+
+    .image-viewer.open {
+        display: flex;
+    }
+
+    .viewer-backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.78);
+        border: 0;
+        cursor: zoom-out;
+    }
+
+    .viewer-panel {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: min(100%, 1320px);
+    }
+
+    .viewer-outer {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .viewer-track {
+        display: flex;
+        gap: 16px;
+        transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        will-change: transform;
+    }
+
+    .viewer-card {
+        flex: 0 0 82%;
+        overflow: hidden;
+        border: 2px solid transparent;
+        border-radius: 10px;
+        background: var(--color-surface-raised);
+        opacity: 0.35;
+        transform: scale(0.97);
+        transition:
+            border-color 0.3s ease,
+            opacity 0.3s ease,
+            transform 0.3s ease;
+    }
+
+    .viewer-card.active {
+        border-color: var(--color-accent);
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .viewer-card img {
+        display: block;
+        width: 100%;
+        max-height: calc(100dvh - 96px);
+        object-fit: contain;
+    }
+
+    .viewer-close {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        background: var(--color-surface-raised);
+        color: var(--color-text);
+        cursor: pointer;
+    }
+
+    .viewer-nav {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        background: var(--color-surface-raised);
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition:
+            background 0.15s ease,
+            border-color 0.15s ease,
+            color 0.15s ease;
+    }
+
+    .viewer-nav:hover {
+        background: var(--color-surface-active);
+        border-color: var(--color-accent);
+        color: var(--color-accent);
+    }
+
+    .viewer-close i,
+    .viewer-close svg,
+    .viewer-nav i,
+    .viewer-nav svg {
+        display: block;
+        width: 18px;
+        height: 18px;
     }
 
     @media (max-width: 640px) {
@@ -337,6 +583,35 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
             right: 6%;
             top: 50%;
             transform: translate(50%, -50%);
+        }
+
+        .image-viewer {
+            padding: 12px;
+        }
+
+        .viewer-nav {
+            position: absolute;
+            z-index: 3;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(6px);
+            border-color: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        #viewer-prev {
+            left: 6%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #viewer-next {
+            right: 6%;
+            top: 50%;
+            transform: translate(50%, -50%);
+        }
+
+        .viewer-card {
+            flex: 0 0 88%;
         }
     }
 </style>
