@@ -5,21 +5,23 @@ description: Reference for all configurable options in Modrex.
 
 ## Game Path
 
-The absolute path to your PAYDAY 3 installation root - the folder containing `PAYDAY3/Content/`.
-Modrex auto-detects this on first launch by scanning known launcher locations.
+The absolute path to the active game's installation root. Modrex auto-detects this by scanning known
+launcher locations for the selected game.
 
 Click **Browse** to set it manually. Modrex validates the path and identifies your launcher when
 you save.
 
 ## Launcher
 
-Override the auto-detected launcher. Options: **Steam**, **Epic Games**, **Xbox App**. Modrex uses
-this to determine how to start PAYDAY 3 when you click Launch.
+Override the auto-detected launcher. PAYDAY 3 supports **Steam**, **Epic Games**, and **Xbox App**.
+PAYDAY 2 and PAYDAY: The Heist currently support **Steam**. Modrex uses this to determine how to
+start the active game when you click Launch.
 
 ## Launch Options
 
-Command-line arguments appended to every game launch. Add `-fileopenlog` here if mods aren't
-loading - most mods require it for Unreal Engine to scan the mods directory.
+Command-line arguments appended to every launch for the active game. Add `-fileopenlog` here for
+PAYDAY 3 if `.pak` mods aren't loading - most PAYDAY 3 mods require it for Unreal Engine to scan the
+mods directory.
 
 ## Skip warnings
 
@@ -30,6 +32,11 @@ Checkboxes to suppress specific one-time warnings:
 
 Re-enable any warning by unchecking it here.
 
+## Usage analytics
+
+Modrex may ask whether you want to share anonymous usage analytics. This is optional and can be
+changed later from **Settings - Usage analytics**. Analytics are off unless you opt in.
+
 ## App data locations
 
 Modrex stores its state and settings in the following locations:
@@ -39,5 +46,6 @@ Modrex stores its state and settings in the following locations:
 | Windows  | `%APPDATA%\Modrex\` |
 | Linux    | `~/.config/modrex/` |
 
-The mod state file (`.pd3mm.json`) lives inside your game's `~mods/` folder so it travels with the
-game directory on dual-boot setups.
+The mod state file (`.modrex.json`) lives inside the active game's managed mods folder so it travels
+with the game directory on dual-boot setups. Older `.pd3mm.json` state files are migrated
+automatically.

@@ -1,6 +1,6 @@
 ---
 title: Installation
-description: Modrex is a desktop app for Windows and Linux. Download the build for your platform, install it, and launch - there's no account to create and nothing to configure to get started.
+description: Modrex is a desktop app for Windows and Linux. Download the build for your platform, pick a supported PAYDAY game, and start managing mods - there's no account to create.
 ---
 
 import Callout from '../../components/docs/Callout.astro'
@@ -24,36 +24,47 @@ Pick the package for your distribution:
 - **`.AppImage`** - Any distribution. Mark the file executable (`chmod +x modrex.AppImage`) and run
   it directly.
 
+## Choose a game
+
+On first launch Modrex asks which game you want to manage. Supported games:
+
+- **PAYDAY 3** - `.pak` mods in the Unreal `~mods` folder.
+- **PAYDAY 2** - BLT/BeardLib mods and `mod_overrides` content.
+- **PAYDAY: The Heist** - PDTH BLT/DAHM mods and `mod_overrides` content.
+
+You can switch games from the sidebar at any time. Each game keeps its own path, launcher, launch
+options, installed list, and folders.
+
 ## Game detection
 
-On first launch Modrex automatically scans for PAYDAY 3 across Steam, Epic Games, and the Xbox App.
-If it finds your install, you're ready to go.
+Modrex automatically scans for the selected game across the launchers it supports. If it finds your
+install, you're ready to go.
 
 If detection fails, set the path manually:
 
 1. Open **Settings** from the bottom of the sidebar.
-2. Under **Game Path**, click **Browse** and select your PAYDAY 3 root folder.
+2. Under **Game Path**, click **Browse** and select the game's root folder.
 3. Modrex validates the path and identifies your launcher.
 
 <Callout>
-    The PAYDAY 3 root folder should contain a `PAYDAY3/Content/` subdirectory. On Steam this is
-    typically `SteamLibrary/steamapps/common/PAYDAY 3`.
+    Select the root folder, not the mods folder. On Steam this is typically
+    `SteamLibrary/steamapps/common/<game name>`.
 </Callout>
 
 ## Launch options
 
-For most mods to work, PAYDAY 3 needs the `-fileopenlog` launch argument. Add it in
+For most PAYDAY 3 mods to work, the game needs the `-fileopenlog` launch argument. Add it in
 **Settings - Launch Options**, or directly in your launcher's launch arguments for PAYDAY 3.
 
 <Callout>
-    If you install a mod and it doesn't appear in-game, a missing `-fileopenlog` argument is the
-    most common cause.
+    `-fileopenlog` is a PAYDAY 3 requirement. PAYDAY 2 and PAYDAY: The Heist use loader-based mod
+    systems instead.
 </Callout>
 
 ## Requirements
 
-| Launcher                                                                                                    | <img src="/icons/windows-white.svg" width="16" style="display:inline;vertical-align:middle" /> Windows | <img src="/icons/linux-white.svg" width="16" style="display:inline;vertical-align:middle" /> Linux |
-| ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
-| <img src="/icons/steam-white.svg" width="16" style="display:inline;vertical-align:middle" /> Steam          | ![yes](https://img.shields.io/badge/Yes-brightgreen)                                                   | ![yes](https://img.shields.io/badge/Yes-brightgreen)                                               |
-| <img src="/icons/epicgames-white.svg" width="16" style="display:inline;vertical-align:middle" /> Epic Games | ![yes](https://img.shields.io/badge/Yes-brightgreen)                                                   | ![no](https://img.shields.io/badge/No-red)                                                         |
-| <img src="/icons/xbox-white.svg" width="16" style="display:inline;vertical-align:middle" /> Xbox App        | ![yes](https://img.shields.io/badge/Yes-brightgreen)                                                   | ![no](https://img.shields.io/badge/No-red)                                                         |
+| Game              | Steam                                                | Epic Games                                           | Xbox App                                             |
+| ----------------- | ---------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------- |
+| PAYDAY 3          | ![yes](https://img.shields.io/badge/Yes-brightgreen) | ![yes](https://img.shields.io/badge/Yes-brightgreen) | ![yes](https://img.shields.io/badge/Yes-brightgreen) |
+| PAYDAY 2          | ![yes](https://img.shields.io/badge/Yes-brightgreen) | ![no](https://img.shields.io/badge/No-red)           | ![no](https://img.shields.io/badge/No-red)           |
+| PAYDAY: The Heist | ![yes](https://img.shields.io/badge/Yes-brightgreen) | ![no](https://img.shields.io/badge/No-red)           | ![no](https://img.shields.io/badge/No-red)           |

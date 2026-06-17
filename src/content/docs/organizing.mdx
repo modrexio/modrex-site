@@ -1,6 +1,6 @@
 ---
 title: Organizing mods
-description: Use folders and priority ordering to control which mods load and in what order.
+description: Use folders, priority ordering, and file management tools to control which mods load and in what order.
 ---
 
 import Callout from '../../components/docs/Callout.astro'
@@ -18,19 +18,29 @@ Deleting a folder moves its contents to the parent level; the mod files are not 
 
 ## Priority order
 
-PAYDAY 3 uses Unreal Engine 5, which loads `.pak` files alphabetically. Modrex translates your
-visual order into numeric prefixes (`001_`, `002_`, ...) on the actual filenames on disk.
+PAYDAY 3 uses Unreal Engine 5, which loads `.pak` files alphabetically. For PAYDAY 3, Modrex
+translates your visual order into numeric prefixes (`001_`, `002_`, ...) on the actual filenames on
+disk.
 
 **Higher in the list = lower priority. Lower in the list = higher priority = loads last = wins
 conflicts.**
 
-Drag mods up and down within the list to reorder them. Priority is scoped to siblings within the
-same folder - mods in different folders don't compete unless they reference the same game assets.
+Drag mods up and down within the list to reorder them. Priority is scoped to siblings within the same
+folder - mods in different folders don't compete unless they reference the same game assets.
 
 <Callout>
-    If two mods modify the same asset and you're getting the wrong one in-game, swap their positions
-    in the list.
+    PAYDAY 2 and PAYDAY: The Heist directory mods are not renamed for load order. Modrex still lets
+    you organize them into folders and enable or disable them.
 </Callout>
+
+## Manage files
+
+Mods that install multiple files can be opened in **Manage files**. Use it to search the files in a
+mod, enable or disable individual entries, remove selected entries, or reinstall a missing entry
+from the original archive when Modrex can identify it.
+
+Missing files appear as ghost rows so you can repair a partially deleted mod without reinstalling
+everything.
 
 ## Bulk enable / disable
 

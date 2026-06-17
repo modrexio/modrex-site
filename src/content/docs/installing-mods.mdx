@@ -1,23 +1,39 @@
 ---
 title: Installing mods
-description: Install mods from modworkshop with one click, or drop in local files from your filesystem.
+description: Install mods from modworkshop with one click, or drop in local archives from your filesystem.
 ---
 
 import Callout from '../../components/docs/Callout.astro'
 
 ## From Browse
 
-The **Browse** tab shows the full PAYDAY 3 mod catalog on modworkshop. Click any mod to open its
+The **Browse** tab shows the modworkshop catalog for the active game. Click any mod to open its
 detail page, then click **Install**. Modrex downloads the file, extracts it if needed, and places
 it in the correct location automatically.
 
-Supported file formats: `.pak`, `.zip`, `.7z`, `.tar.gz`, `.tar.xz`.
+Supported local file formats: `.pak`, `.zip`, `.7z`, `.rar`.
+
+Archives can contain PAYDAY 3 `.pak` files, PAYDAY 2/PAYDAY: The Heist BLT or BeardLib folders, or
+`mod_overrides` content. If an archive contains both `mods/` and `mod_overrides/` entries, Modrex
+routes each entry to the right destination.
 
 ### Multi-file mods
 
-Some mods ship multiple `.pak` files inside a single archive. When Modrex detects this, it opens a
-picker so you can choose which files to install. All files are pre-selected by default - deselect
-any you don't want.
+Some mods ship multiple files or folders inside a single archive. When Modrex detects this, it opens
+a picker so you can choose which entries to install. All entries are pre-selected by default -
+deselect any you don't want.
+
+### Loader and host-mod dependencies
+
+For PAYDAY 2 and PAYDAY: The Heist, some mods require a loader such as SuperBLT,
+PDTHModOverrides, or DAHM. When Modrex can install a required loader directly, the dependency
+warning includes an install action. If a dependency is hosted offsite, Modrex opens the external
+download page so you can install it manually.
+
+Some PAYDAY 2 content packs belong inside another host mod instead of directly inside the game.
+When Modrex recognizes that pattern, it prompts you to install the required host mod and then places
+the pack inside it. If an archive cannot be placed safely, Modrex shows the author's instructions
+instead of guessing.
 
 ### External links
 
@@ -26,8 +42,8 @@ the link in your browser. Download the file manually, then install it from a loc
 
 ## From a local file
 
-Drag a `.pak`, `.zip`, or `.7z` file onto the **Installed** tab, or click **Install from file** in
-the top bar. Modrex handles extraction and placement the same way as a Browse install.
+Drag a supported file onto the **Installed** tab, or click **Install from file** in the top bar.
+Modrex handles extraction and placement the same way as a Browse install.
 
 ## Enable and disable
 
@@ -45,7 +61,7 @@ disk and the mod is removed from Modrex's state.
     instead.
 </Callout>
 
-## Reinstalling / updating
+## Reinstalling and updating
 
-Click **Reinstall** on a mod to re-download and replace its current file. For bulk updates, see the
-[updating mods](/docs/updating) guide.
+Click **Reinstall** on a mod to re-download and replace its current file. If Modrex detects newer
+versions for installed mods, use the update prompt to review and install them in bulk.

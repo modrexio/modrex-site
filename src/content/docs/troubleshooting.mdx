@@ -1,41 +1,48 @@
 ---
 title: Troubleshooting
-description: Solutions to the most common problems with Modrex and PAYDAY 3 mods.
+description: Solutions to the most common problems with Modrex and PAYDAY mods.
 ---
 
 import Callout from '../../components/docs/Callout.astro'
 
 ## Mods not loading in-game
 
-**Most common cause: missing `-fileopenlog` launch argument.**
+For PAYDAY 3, the most common cause is a missing `-fileopenlog` launch argument.
 
-Add `-fileopenlog` to **Settings - Launch Options**. Without it, Unreal Engine 5 does not scan
-the `~mods/` directory and no mods will load regardless of what's installed.
+Add `-fileopenlog` to **Settings - Launch Options**. Without it, Unreal Engine 5 does not scan the
+`~mods/` directory and no PAYDAY 3 `.pak` mods will load regardless of what's installed.
 
 Other things to check:
 
 - The mod's toggle is on (not disabled).
 - A higher-priority mod isn't overriding it - try moving it lower in the list.
-- The mod targets your version of PAYDAY 3.
+- The mod targets the active game and your installed game version.
+- For PAYDAY 2 or PAYDAY: The Heist, the required loader is installed and working.
 
 ## Game not detected on first launch
 
-If Modrex can't find PAYDAY 3 automatically:
+If Modrex can't find the selected game automatically:
 
 1. Go to **Settings - Game Path** and click **Browse**.
-2. Navigate to the folder that contains `PAYDAY3/Content/`.
+2. Navigate to the game's installation root folder.
 3. Click **Select Folder** - Modrex validates and saves the path.
 
 On Xbox Game Pass, Modrex scans drive roots (C: through G:) for the Xbox install path. This can
-take a few seconds on the first detection pass.
+take a few seconds on the first PAYDAY 3 detection pass.
 
 ## "Missing file" badge on a mod
 
-This appears when Modrex's state file references a `.pak` that no longer exists on disk. This
-happens after manually deleting files or moving your game folder.
+This appears when Modrex's state file references a file or folder that no longer exists on disk.
+This happens after manually deleting files or moving your game folder.
 
 Either **Reinstall** the mod to re-download it, or right-click and select **Uninstall** to remove
 the stale entry.
+
+## Archive cannot be installed
+
+If Modrex says it cannot tell where an archive installs, the archive likely belongs inside another
+mod or has a layout that does not identify a supported target. Follow the author's instructions
+shown in the dialog, then install the files manually if needed.
 
 ## Modrex won't launch after a Windows update
 
