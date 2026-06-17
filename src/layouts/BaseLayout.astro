@@ -7,7 +7,7 @@ interface Props {
     description?: string
 }
 
-const { title, description = 'Free, open-source desktop mod manager for PAYDAY 3.' } = Astro.props
+const { title, description = 'Free, open-source desktop mod manager for game mods.' } = Astro.props
 
 const pageTitle = title === 'Modrex' ? 'Modrex' : `${title} - Modrex`
 const canonicalUrl = Astro.url.href
