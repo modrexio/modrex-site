@@ -7,12 +7,21 @@ import DownloadSection from '../components/DownloadSection.astro'
 import SiteFooter from '../components/SiteFooter.astro'
 import { getLatestRelease } from '../lib/github'
 import type { Release } from '../lib/github'
+import { getModIndexStats } from '../lib/mod-index'
+import type { ModIndexStats } from '../lib/mod-index'
 
 let release: Release | null = null
 try {
     release = await getLatestRelease()
 } catch {
     // GitHub API unavailable at build time — release data optional
+}
+
+let indexStats: ModIndexStats | null = null
+try {
+    indexStats = await getModIndexStats()
+} catch {
+    // Index data is optional on the marketing page.
 }
 
 const jsonLd = {
@@ -37,7 +46,7 @@ const jsonLd = {
     <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} slot="head" />
     <Nav release={release} />
     <Hero release={release} />
-    <Features />
+    <Features indexStats={indexStats} />
     <DownloadSection release={release} />
     <SiteFooter />
 </BaseLayout>

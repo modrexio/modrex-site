@@ -1,14 +1,25 @@
 ---
+import type { ModIndexStats } from '../lib/mod-index'
+
+interface Props {
+    indexStats: ModIndexStats | null
+}
+
+const { indexStats } = Astro.props
+const supportedMods = indexStats
+    ? new Intl.NumberFormat('en-US').format(indexStats.supportedMods)
+    : null
+
 const features: [string, string, string][] = [
     [
         'compass',
         'Browse modworkshop',
-        'Search the full PAYDAY 3 catalog with categories, sorting, and rich mod pages - images, changelogs, and dependencies.',
+        'Search PAYDAY 3, PAYDAY 2, and PAYDAY: The Heist catalogs with categories, sorting, rich mod pages, and dependencies.',
     ],
     [
         'download',
         'One-click install',
-        'Install, enable, disable, and remove in a click. Supports .pak, .zip, and .7z, with multi-file mods grouped as one.',
+        'Install, enable, disable, and remove in a click. Supports .pak, .zip, .7z, and .rar, with multi-file archives grouped as one.',
     ],
     [
         'folder-tree',
@@ -28,7 +39,7 @@ const features: [string, string, string][] = [
     [
         'crosshair',
         'Auto-detects your install',
-        'Finds PAYDAY 3 across Steam, Epic Games, and the Xbox App - and identifies stray .pak files by hash.',
+        'Finds supported games across their launchers - and identifies manually placed mods by hash.',
     ],
 ]
 ---
@@ -37,12 +48,21 @@ const features: [string, string, string][] = [
     <div class="wrap">
         <div class="sec-head">
             <span class="sec-eyebrow">Everything in one place</span>
-            <h2 class="sec-title">Built for modding PAYDAY 3</h2>
+            <h2 class="sec-title">Built for PAYDAY modding</h2>
             <p class="sec-sub">
-                No more dragging .pak files into folders by hand. Modrex handles discovery, install,
-                updates, and launch - so you can get back to the heist.
+                No more dragging files into game folders by hand. Modrex handles discovery, install,
+                updates, and launch across supported PAYDAY games - so you can get back to the
+                heist.
             </p>
         </div>
+        {
+            supportedMods && (
+                <div class="index-count">
+                    <strong>{supportedMods}</strong>
+                    <span>supported mods indexed</span>
+                </div>
+            )
+        }
         <div class="features-grid">
             {
                 features.map(([icon, title, body]) => (
@@ -106,6 +126,39 @@ const features: [string, string, string][] = [
         line-height: 1.55;
         color: var(--text-secondary);
         margin: 0;
+    }
+
+    .index-count {
+        width: 100%;
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        gap: 10px;
+        margin: -24px 0 48px;
+        padding: 18px 0;
+        border-top: 1px solid var(--color-border);
+        border-bottom: 1px solid var(--color-border);
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-secondary);
+    }
+
+    .index-count strong {
+        font-family: var(--font-display);
+        font-size: 28px;
+        line-height: 1;
+        letter-spacing: 0.01em;
+        color: var(--color-text);
+        vertical-align: -0.08em;
+    }
+
+    @media (max-width: 500px) {
+        .index-count {
+            margin: -16px 0 36px;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
     }
 
     @media (max-width: 860px) {

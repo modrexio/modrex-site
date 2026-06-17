@@ -6,6 +6,7 @@ interface Props {
 }
 const { release } = Astro.props
 const version = release?.tag_name?.replace(/^v/, '') ?? null
+const metaParts = ['Free & open-source', version ? `v${version}` : null].filter(Boolean)
 
 const shots = [
     { src: '/browse-mods.png', alt: 'Browse mods' },
@@ -39,7 +40,7 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
                 <a href="/#download" class="btn-lg secondary other-platforms">Other platforms</a>
             </div>
             <p class="hero-meta">
-                Free &amp; open-source{version ? ` · v${version}` : ''} · powered by
+                {metaParts.join(' · ')} · powered by
                 <a href="https://modworkshop.net" target="_blank" rel="noopener">modworkshop</a>
             </p>
         </div>
