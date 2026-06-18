@@ -1,11 +1,12 @@
 ---
 const shots = [
     { src: '/browse-mods.png', alt: 'Browse mods' },
+    { src: '/choose-game.png', alt: 'Choose game' },
     { src: '/installed%20mods.png', alt: 'Installed mods' },
     { src: '/settings.png', alt: 'Settings' },
 ]
 
-// 5-slot infinite track: [clone-last, 0, 1, 2, clone-first]
+// Infinite track: [clone-last, ...real shots, clone-first]
 const slots = [shots.at(-1)!, ...shots, shots[0]]
 ---
 
@@ -118,9 +119,9 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
     const viewerOuter = document.getElementById('viewer-outer')!
     const viewerTrack = document.getElementById('viewer-track')!
     const viewerCards = Array.from(viewerTrack.querySelectorAll<HTMLElement>('.viewer-card'))
-    // slots: [clone-last(0), real0(1), real1(2), real2(3), clone-first(4)]
+    // slots: [clone-last(0), ...real shots, clone-first]
     const REAL_FIRST = 1
-    const REAL_LAST = 3
+    const REAL_LAST = cards.length - 2
     const realCards = cards.slice(REAL_FIRST, REAL_LAST + 1)
     const GAP = 16
     let slotIndex = REAL_FIRST // start centered on slot 1 (shots[0])
