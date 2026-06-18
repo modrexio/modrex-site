@@ -2,12 +2,8 @@ import { createRequire } from 'node:module'
 
 import initSqlJs from 'sql.js'
 
-const INDEX_RELEASE_API =
-    'https://api.github.com/repos/modrexio/modrex-index/releases/tags/latest-index'
-
-interface IndexRelease {
-    assets: { name: string; url: string }[]
-}
+const INDEX_DB_URL =
+    'https://github.com/modrexio/modrex-index/releases/download/latest-index/index.db'
 
 export interface ModIndexStats {
     supportedMods: number
@@ -16,8 +12,7 @@ export interface ModIndexStats {
 const require = createRequire(import.meta.url)
 
 export async function getModIndexStats(): Promise<ModIndexStats> {
-    const assetUrl = await getIndexAssetUrl()
-    const dbBytes = await downloadIndex(assetUrl)
+    const dbBytes = await downloadIndex()
     const SQL = await initSqlJs({
         locateFile: () => require.resolve('sql.js/dist/sql-wasm.wasm'),
     })
@@ -36,24 +31,9 @@ export async function getModIndexStats(): Promise<ModIndexStats> {
     }
 }
 
-async function getIndexAssetUrl(): Promise<string> {
-    const res = await fetch(INDEX_RELEASE_API, {
-        headers: { Accept: 'application/vnd.github+json' },
-    })
-    if (!res.ok) throw new Error(`GitHub API error: ${res.status}`)
-
-    const release = (await res.json()) as IndexRelease
-    const asset = release.assets.find((item) => item.name === 'index.db')
-    if (!asset) throw new Error('index.db asset not found')
-
-    return asset.url
-}
-
-async function downloadIndex(assetUrl: string): Promise<Uint8Array> {
-    const res = await fetch(assetUrl, {
-        headers: { Accept: 'application/octet-stream' },
-    })
-    if (!res.ok) throw new Error(`GitHub asset error: ${res.status}`)
+async function downloadIndex(): Promise<Uint8Array> {
+    const res = await fetch(INDEX_DB_URL)
+    if (!res.ok) throw new Error(`Index download error: ${res.status}`)
 
     return new Uint8Array(await res.arrayBuffer())
 }

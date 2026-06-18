@@ -20,8 +20,8 @@ try {
 let indexStats: ModIndexStats | null = null
 try {
     indexStats = await getModIndexStats()
-} catch {
-    // Index data is optional on the marketing page.
+} catch (error) {
+    console.error('Failed to load mod index stats', error)
 }
 
 const jsonLd = {
