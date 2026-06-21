@@ -19,7 +19,7 @@ Commit messages must follow conventional commits (`type(scope): subject`) — en
 
 ## Architecture
 
-Pure static Astro 6 site. No server runtime — everything is rendered at build time.
+Astro 6 site, static output — everything under `src/` is rendered at build time, no SSR adapter. The one exception is `functions/`, a Cloudflare Pages Functions directory that sits alongside the static build (not part of Astro/Vite at all — Cloudflare's own build step picks it up).
 
 ```
 src/pages/          ← routes
@@ -32,7 +32,14 @@ src/lib/mod-index.ts ← mod index count fallback from latest-index index.db (bu
 src/lib/docs-nav.ts ← docs sidebar nav structure (single source of truth)
 src/styles/global.css          ← imports tokens + shared utilities + mobile breakpoints
 src/styles/tokens/             ← design tokens (colors, typography, spacing, components)
+functions/api/collect.ts ← Cloudflare Pages Function, see "API (Cloudflare Pages Functions)" below
 ```
+
+### API (Cloudflare Pages Functions)
+
+`functions/api/collect.ts` is a transparent proxy for the desktop app's analytics: it forwards `POST /api/collect` (query string + body, mostly untouched) to GA4's Measurement Protocol `mp/collect` endpoint. It exists because DNS-level/hosts-file blocklists and outbound firewalls commonly block `google-analytics.com` itself, for every process on a machine — not just browsers — and modrex-main's audience runs that tooling heavily; routing through `modrex.net` means the request only has to survive being blocked by name, not by Google's domain. See `modrex-main/src-tauri/src/commands/analytics.rs` for the other half. File-based routing: a file at `functions/<path>.ts` maps to that route (`functions/api/collect.ts` → `/api/collect`); export `onRequestPost`/`onRequestGet`/etc. per HTTP method. Deploys automatically alongside the static site via the existing Cloudflare Pages Git integration — no separate build step, no secrets, not part of `pnpm build`/`pnpm typecheck` (Astro's checker doesn't walk this directory, confirmed: `astro check` only reports on files under `src/`).
+
+**Geolocation fix**: the one place this function isn't a pure byte passthrough. Since Google sees the request coming from this function's own outbound `fetch`, not the desktop app's connection, GA4 would otherwise geolocate every single user as wherever Cloudflare's network egresses from — not their real country. The function reads `CF-Connecting-IP` (set by Cloudflare's edge from the real TCP connection; not spoofable by the client) and injects it as a top-level `ip_override` field in the forwarded JSON body, which is GA4's documented mechanism for exactly this server-side-proxy scenario. Absent under local `wrangler pages dev` (no real edge involved) — forwards fine, just without geo correction in that case.
 
 ### Data flow
 
