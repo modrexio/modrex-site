@@ -53,19 +53,15 @@ const features: [string, string, string][] = [
             </p>
         </div>
         <div class="features-grid">
-            {
-                supportedMods && (
-                    <div class="index-count">
-                        <p>Recognized mods</p>
-                        <strong>{supportedMods}</strong>
-                        <span>known mods Modrex can match automatically</span>
-                        <small>Helps Modrex detect mods already in your game folder.</small>
-                    </div>
-                )
-            }
+            <div class="index-count">
+                <p>Recognized mods</p>
+                <strong data-mod-index-count aria-live="polite">{supportedMods ?? '...'}</strong>
+                <span>known mods Modrex can match automatically</span>
+                <small>Helps Modrex detect mods already in your game folder.</small>
+            </div>
             {
                 features.map(([icon, title, body], index) => (
-                    <div class:list={['feature', { 'feature-wide': !supportedMods && index < 2 }]}>
+                    <div class:list={['feature', { 'feature-wide': !indexStats && index < 2 }]}>
                         <div class="ic">
                             <i data-lucide={icon} />
                         </div>
@@ -80,7 +76,30 @@ const features: [string, string, string][] = [
 
 <script>
     import { createIcons, Compass, Download, FolderTree, RefreshCw, Play, Crosshair } from 'lucide'
+    import { INDEX_STATS_URL, type ModIndexStatsPayload } from '../lib/mod-index-shared'
+
     createIcons({ icons: { Compass, Download, FolderTree, RefreshCw, Play, Crosshair } })
+
+    const countEl = document.querySelector<HTMLElement>('[data-mod-index-count]')
+
+    async function refreshModIndexCount() {
+        if (!countEl) return
+
+        const cacheKey = Math.floor(Date.now() / 60_000)
+        const res = await fetch(`${INDEX_STATS_URL}?t=${cacheKey}`, { cache: 'no-store' })
+
+        if (!res.ok) throw new Error(`Index stats download error: ${res.status}`)
+
+        const stats = (await res.json()) as ModIndexStatsPayload
+
+        if (Number.isFinite(stats.supportedMods) && stats.supportedMods > 0) {
+            countEl.textContent = new Intl.NumberFormat('en-US').format(stats.supportedMods)
+        }
+    }
+
+    refreshModIndexCount().catch((error: unknown) => {
+        console.error('Failed to refresh mod index count', error)
+    })
 </script>
 
 <style>
