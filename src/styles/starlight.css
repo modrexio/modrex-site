@@ -47,12 +47,118 @@ body {
     background: var(--color-surface);
 }
 
-.header {
-    border-bottom-color: var(--color-border);
+.page > .header {
+    height: var(--sl-nav-height);
+    padding: 0;
+    border-bottom: 0;
+    background: transparent;
+}
+
+[data-has-sidebar] .page > .header {
+    padding-inline-end: 0;
+}
+
+.page > .header nav {
+    position: static;
+}
+
+.page > .header .wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 32px;
+}
+
+.page > .header .btn-lg {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 12px 22px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: var(--transition-colors);
+}
+
+.page > .header .btn-lg.primary {
+    background: var(--color-accent);
+    color: var(--on-accent);
+}
+
+.page > .header .btn-lg.primary:hover {
+    background: var(--color-accent-fill-hover);
+    color: var(--on-accent);
+}
+
+@media (max-width: 50rem) {
+    .page > .header .nav-links,
+    .page > .header .nav-right {
+        display: none;
+    }
+
+    .page > .header .hamburger {
+        display: flex;
+    }
+
+    starlight-menu-button button {
+        top: 12px;
+        inset-inline-end: 64px;
+        width: 36px;
+        height: 36px;
+        border-radius: var(--radius-sm);
+        background: var(--color-surface-hover);
+        color: var(--color-text);
+        box-shadow: none;
+    }
+
+    starlight-menu-button[aria-expanded='true'] button {
+        background: var(--color-surface-active);
+    }
+}
+
+@media (max-width: 768px) {
+    .page > .header .wrap {
+        padding-inline: 16px;
+    }
 }
 
 .sidebar-content {
     border-inline-end-color: var(--color-border);
+}
+
+.docs-sidebar-search {
+    padding-bottom: 0.25rem;
+}
+
+#starlight__sidebar .docs-sidebar-search site-search {
+    display: block;
+}
+
+#starlight__sidebar .docs-sidebar-search button[data-open-modal] {
+    width: 100%;
+    max-width: none;
+    height: 2.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+}
+
+#starlight__sidebar .docs-sidebar-search button[data-open-modal]:hover {
+    border-color: var(--color-surface-light);
+    background: var(--color-surface-hover);
+    color: var(--color-text);
+}
+
+#starlight__sidebar a[aria-current='page'],
+#starlight__sidebar a[aria-current='page']:hover,
+#starlight__sidebar a[aria-current='page']:focus {
+    background: var(--color-surface-active);
+    color: var(--color-text);
+    box-shadow: inset 2px 0 0 var(--color-accent-bright);
 }
 
 .sl-markdown-content :is(h1, h2, h3, h4) {
