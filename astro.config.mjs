@@ -37,6 +37,10 @@ export default defineConfig({
                     items: [{ autogenerate: { directory: 'docs/games' } }],
                 },
                 {
+                    label: 'Concepts',
+                    items: [{ autogenerate: { directory: 'docs/concepts' } }],
+                },
+                {
                     label: 'Using Modrex',
                     items: [
                         { slug: 'docs/installing-mods' },

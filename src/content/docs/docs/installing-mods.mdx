@@ -15,6 +15,7 @@ Supported local file formats: `.pak`, `.zip`, `.7z`, `.rar`.
 
 Archives can contain loose `.pak` files, directory mods, `mod_overrides` content, UE4SS Lua mods, or
 game-specific folder layouts. Modrex routes entries based on the active game's install targets. See
+[Archives and loaders](/docs/concepts/archives-and-loaders) for the classification rules and
 [Supported games](/docs/games/) for the exact targets for each game.
 
 ### Multi-file mods
@@ -32,7 +33,8 @@ dependency is hosted offsite, Modrex opens the external download page so you can
 Some PAYDAY 2 content packs belong inside another host mod instead of directly inside the game.
 When Modrex recognizes that pattern, it prompts you to install the required host mod and then places
 the pack inside it. If an archive cannot be placed safely, Modrex shows the author's instructions
-instead of guessing.
+instead of guessing. See [Archives and loaders](/docs/concepts/archives-and-loaders#host-mod-content-packs)
+for how host-mod content is handled.
 
 ### External links
 
