@@ -63,12 +63,6 @@ body {
     position: static;
 }
 
-.page > .header .wrap {
-    max-width: 1120px;
-    margin: 0 auto;
-    padding: 0 32px;
-}
-
 .page > .header .btn-lg {
     display: inline-flex;
     align-items: center;

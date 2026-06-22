@@ -23,10 +23,28 @@ const linUrl =
             <a href="/#download">Download</a>
             <a href="/docs/getting-started" class:list={[{ active: activePage === 'docs' }]}>Docs</a
             >
-            <a href="https://github.com/modrexio/modrex" target="_blank" rel="noopener">GitHub</a>
-            <a href="https://discord.gg/tenzpx8JRM" target="_blank" rel="noopener">Discord</a>
         </div>
         <div class="nav-right">
+            <a
+                href="https://github.com/modrexio/modrex"
+                class="social-link"
+                target="_blank"
+                rel="noopener"
+                aria-label="GitHub"
+                title="GitHub"
+            >
+                <span class="social-icon github" aria-hidden="true"></span>
+            </a>
+            <a
+                href="https://discord.gg/tenzpx8JRM"
+                class="social-link"
+                target="_blank"
+                rel="noopener"
+                aria-label="Discord"
+                title="Discord"
+            >
+                <span class="social-icon discord" aria-hidden="true"></span>
+            </a>
             <a
                 id="nav-dl-btn"
                 href={winUrl}
@@ -56,18 +74,37 @@ const linUrl =
             <a href="/#download">Download</a>
             <a href="/docs/getting-started" class:list={[{ active: activePage === 'docs' }]}>Docs</a
             >
-            <a href="https://github.com/modrexio/modrex" target="_blank" rel="noopener">GitHub</a>
-            <a href="https://discord.gg/tenzpx8JRM" target="_blank" rel="noopener">Discord</a>
-            <a
-                id="mobile-dl-btn"
-                href={winUrl}
-                data-win={winUrl}
-                data-lin={linUrl}
-                class="btn-lg primary"
-                style="justify-content: center; margin-top: 8px"
-            >
-                Download
-            </a>
+            <div class="mobile-actions">
+                <a
+                    href="https://github.com/modrexio/modrex"
+                    class="social-link"
+                    target="_blank"
+                    rel="noopener"
+                    aria-label="GitHub"
+                    title="GitHub"
+                >
+                    <span class="social-icon github" aria-hidden="true"></span>
+                </a>
+                <a
+                    href="https://discord.gg/tenzpx8JRM"
+                    class="social-link"
+                    target="_blank"
+                    rel="noopener"
+                    aria-label="Discord"
+                    title="Discord"
+                >
+                    <span class="social-icon discord" aria-hidden="true"></span>
+                </a>
+                <a
+                    id="mobile-dl-btn"
+                    href={winUrl}
+                    data-win={winUrl}
+                    data-lin={linUrl}
+                    class="btn-lg primary mobile-dl-btn"
+                >
+                    Download
+                </a>
+            </div>
         </div>
     </div>
 </nav>
@@ -111,13 +148,25 @@ const linUrl =
     }
 
     .nav-inner {
-        display: flex;
+        --header-side-width: var(--sl-sidebar-width, 17rem);
+        --header-wordmark-width: 5.5rem;
+
+        display: grid;
+        grid-template-columns: var(--header-side-width) minmax(0, 1fr) var(--header-side-width);
         align-items: center;
-        justify-content: space-between;
         height: 60px;
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .modrex-wordmark {
+        justify-self: center;
     }
 
     .nav-links {
+        justify-self: center;
         display: flex;
         align-items: center;
         gap: 28px;
@@ -135,9 +184,57 @@ const linUrl =
     }
 
     .nav-right {
+        justify-self: end;
         display: flex;
         align-items: center;
-        gap: 16px;
+        gap: 8px;
+        padding-inline-end: calc((var(--header-side-width) - var(--header-wordmark-width)) / 2);
+    }
+
+    .social-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        flex: 0 0 34px;
+        border-radius: var(--radius-sm);
+        color: var(--color-text-muted);
+        text-decoration: none;
+        transition: var(--transition-colors);
+    }
+
+    .social-link:hover {
+        color: var(--color-text);
+        background: var(--color-surface-hover);
+    }
+
+    .social-link:focus-visible {
+        outline: 2px solid var(--color-accent-bright);
+        outline-offset: 2px;
+    }
+
+    .social-icon {
+        display: block;
+        width: 18px;
+        height: 18px;
+        background: currentColor;
+        mask-position: center;
+        mask-repeat: no-repeat;
+        mask-size: contain;
+        -webkit-mask-position: center;
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-size: contain;
+    }
+
+    .social-icon.github {
+        mask-image: url('/icons/github.svg');
+        -webkit-mask-image: url('/icons/github.svg');
+    }
+
+    .social-icon.discord {
+        mask-image: url('/icons/discord.svg');
+        -webkit-mask-image: url('/icons/discord.svg');
     }
 
     .hamburger {
@@ -172,7 +269,7 @@ const linUrl =
         padding-bottom: 16px;
     }
 
-    .mobile-links a:not(.btn-lg) {
+    .mobile-links > a:not(.btn-lg) {
         color: var(--text-secondary);
         font-size: 15px;
         text-decoration: none;
@@ -180,16 +277,45 @@ const linUrl =
         border-bottom: 1px solid var(--color-border);
     }
 
-    .mobile-links a:not(.btn-lg):last-of-type {
+    .mobile-links > a:not(.btn-lg):last-of-type {
         border-bottom: none;
     }
 
-    .mobile-links a:not(.btn-lg):hover,
-    .mobile-links a:not(.btn-lg).active {
+    .mobile-links > a:not(.btn-lg):hover,
+    .mobile-links > a:not(.btn-lg).active {
         color: var(--color-text);
     }
 
+    .mobile-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-top: 14px;
+    }
+
+    .mobile-actions .social-link {
+        width: 40px;
+        height: 40px;
+        flex-basis: 40px;
+        background: var(--color-surface-hover);
+        border: 1px solid var(--color-border);
+    }
+
+    .mobile-actions .social-link:hover {
+        background: var(--color-surface-active);
+    }
+
+    .mobile-dl-btn {
+        flex: 1;
+    }
+
     @media (max-width: 768px) {
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            padding-inline: 16px;
+        }
+
         .nav-links,
         .nav-right {
             display: none;
