@@ -1,6 +1,6 @@
 ---
 title: Installation
-description: Modrex is a desktop app for Windows and Linux. Download the build for your platform, pick a supported PAYDAY game, and start managing mods - there's no account to create.
+description: Modrex is a desktop app for Windows and Linux. Download the build for your platform, pick a supported game, and start managing mods - there's no account to create.
 ---
 
 import Callout from '../../../components/docs/Callout.astro'
@@ -31,9 +31,13 @@ On first launch Modrex asks which game you want to manage. Supported games:
 - **PAYDAY 3** - `.pak` mods in the Unreal `~mods` folder.
 - **PAYDAY 2** - BLT/BeardLib mods and `mod_overrides` content.
 - **PAYDAY: The Heist** - PDTH BLT/DAHM mods and `mod_overrides` content.
+- **Crime Boss: Rockay City** - official ModKit folders, legacy `.pak` mods, and UE4SS mods.
 
 You can switch games from the sidebar at any time. Each game keeps its own path, launcher, launch
 options, installed list, and folders.
+
+See [Supported games](/docs/games/) for launcher support, install targets, loader notes, and
+priority behavior per game.
 
 ## Game detection
 
@@ -53,18 +57,19 @@ If detection fails, set the path manually:
 
 ## Launch options
 
-For most PAYDAY 3 mods to work, the game needs the `-fileopenlog` launch argument. Add it in
+For most PAYDAY 3 `.pak` mods to work, the game needs the `-fileopenlog` launch argument. Add it in
 **Settings - Launch Options**, or directly in your launcher's launch arguments for PAYDAY 3.
 
 <Callout>
-    `-fileopenlog` is a PAYDAY 3 requirement. PAYDAY 2 and PAYDAY: The Heist use loader-based mod
-    systems instead.
+    `-fileopenlog` is a PAYDAY 3 requirement. Other supported games use game-specific loader or
+    install-target behavior instead.
 </Callout>
 
 ## Requirements
 
-| Game              | Steam                                                | Epic Games                                           | Xbox App                                             |
-| ----------------- | ---------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------- |
-| PAYDAY 3          | ![yes](https://img.shields.io/badge/Yes-brightgreen) | ![yes](https://img.shields.io/badge/Yes-brightgreen) | ![yes](https://img.shields.io/badge/Yes-brightgreen) |
-| PAYDAY 2          | ![yes](https://img.shields.io/badge/Yes-brightgreen) | ![yes](https://img.shields.io/badge/Yes-brightgreen) | ![no](https://img.shields.io/badge/No-red)           |
-| PAYDAY: The Heist | ![yes](https://img.shields.io/badge/Yes-brightgreen) | ![no](https://img.shields.io/badge/No-red)           | ![no](https://img.shields.io/badge/No-red)           |
+| Game                    | Steam | Epic Games | Xbox App |
+| ----------------------- | ----- | ---------- | -------- |
+| PAYDAY 3                | Yes   | Yes        | Yes      |
+| PAYDAY 2                | Yes   | Yes        | No       |
+| PAYDAY: The Heist       | Yes   | No         | No       |
+| Crime Boss: Rockay City | Yes   | Yes        | No       |

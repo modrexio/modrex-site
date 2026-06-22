@@ -1,0 +1,32 @@
+---
+title: 'Crime Boss: Rockay City'
+description: Setup notes for Crime Boss launcher support, official ModKit folders, legacy pak installs, and UE4SS mods.
+sidebar:
+    order: 40
+---
+
+Crime Boss support uses the official ModKit install location for new installs while still recognizing legacy loose `.pak` installs and UE4SS Lua mods.
+
+## Launchers
+
+| Launcher   | Support |
+| ---------- | ------- |
+| Steam      | Yes     |
+| Epic Games | Yes     |
+| Xbox App   | No      |
+
+## Mod targets
+
+| Target               | Path under game folder          | Notes                                                                                                             |
+| -------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Official ModKit mods | `CrimeBoss/Mods`                | Primary target for new installs. Modrex creates the expected folder structure around extracted files when needed. |
+| Legacy pak mods      | `CrimeBoss/Content/Paks/~mods`  | Used for pre-existing loose `.pak` installs and loose-triplet mods.                                               |
+| UE4SS mods           | `CrimeBoss/Binaries/Win64/Mods` | Used for Lua mods when UE4SS is installed. Bundled UE4SS framework modules are excluded from the installed list.  |
+
+## Priority
+
+The official ModKit target is directory-based and is not renamed for priority. Legacy loose `.pak` installs use numeric filename prefixes when Modrex needs to preserve order on disk.
+
+## Notes
+
+Crime Boss does not currently show the in-app news tab because the app only enables news for games with a supported news source.

@@ -18,19 +18,18 @@ Deleting a folder moves its contents to the parent level; the mod files are not 
 
 ## Priority order
 
-PAYDAY 3 uses Unreal Engine 5, which loads `.pak` files alphabetically. For PAYDAY 3, Modrex
-translates your visual order into numeric prefixes (`001_`, `002_`, ...) on the actual filenames on
-disk.
+Some game targets load loose `.pak` files alphabetically. For those targets, Modrex translates your
+visual order into numeric prefixes (`001_`, `002_`, ...) on the actual filenames on disk.
 
-**Higher in the list = lower priority. Lower in the list = higher priority = loads last = wins
-conflicts.**
+Keep higher-priority `.pak` mods higher in the list. Modrex writes the filenames so the game loads
+them in the intended order.
 
 Drag mods up and down within the list to reorder them. Priority is scoped to siblings within the same
 folder - mods in different folders don't compete unless they reference the same game assets.
 
 <Callout>
-    PAYDAY 2 and PAYDAY: The Heist directory mods are not renamed for load order. Modrex still lets
-    you organize them into folders and enable or disable them.
+    Directory-based targets are not renamed for load order. Modrex still lets you organize them into
+    folders and enable or disable them.
 </Callout>
 
 ## Manage files

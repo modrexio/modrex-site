@@ -13,9 +13,9 @@ it in the correct location automatically.
 
 Supported local file formats: `.pak`, `.zip`, `.7z`, `.rar`.
 
-Archives can contain PAYDAY 3 `.pak` files, PAYDAY 2/PAYDAY: The Heist BLT or BeardLib folders, or
-`mod_overrides` content. If an archive contains both `mods/` and `mod_overrides/` entries, Modrex
-routes each entry to the right destination.
+Archives can contain loose `.pak` files, directory mods, `mod_overrides` content, UE4SS Lua mods, or
+game-specific folder layouts. Modrex routes entries based on the active game's install targets. See
+[Supported games](/docs/games/) for the exact targets for each game.
 
 ### Multi-file mods
 
@@ -25,10 +25,9 @@ deselect any you don't want.
 
 ### Loader and host-mod dependencies
 
-For PAYDAY 2 and PAYDAY: The Heist, some mods require a loader such as SuperBLT,
-PDTHModOverrides, or DAHM. When Modrex can install a required loader directly, the dependency
-warning includes an install action. If a dependency is hosted offsite, Modrex opens the external
-download page so you can install it manually.
+Some mods require a loader such as SuperBLT, PDTHModOverrides, DAHM, or UE4SS. When Modrex can
+install a required loader directly, the dependency warning includes an install action. If a
+dependency is hosted offsite, Modrex opens the external download page so you can install it manually.
 
 Some PAYDAY 2 content packs belong inside another host mod instead of directly inside the game.
 When Modrex recognizes that pattern, it prompts you to install the required host mod and then places

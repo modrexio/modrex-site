@@ -1,0 +1,31 @@
+---
+title: 'PAYDAY: The Heist'
+description: 'Setup notes for PAYDAY: The Heist launcher support, BLT mods, DAHM mods, and mod_overrides.'
+sidebar:
+    order: 30
+---
+
+PAYDAY: The Heist support covers BLT mods, DAHM sub-mods, and asset replacement packs.
+
+## Launchers
+
+| Launcher   | Support |
+| ---------- | ------- |
+| Steam      | Yes     |
+| Epic Games | No      |
+| Xbox App   | No      |
+
+## Mod targets
+
+| Target             | Path under game folder | Notes                                                                                                         |
+| ------------------ | ---------------------- | ------------------------------------------------------------------------------------------------------------- |
+| BLT and DAHM mods  | `mods`                 | Modrex recognizes BLT folders with `mod.txt` and DAHM sub-mods with `base.lua` when they match the mod index. |
+| Asset replacements | `assets/mod_overrides` | Marker-less asset replacement folders are routed here.                                                        |
+
+## Loaders
+
+Modrex has dedicated handling for the PDTHModOverrides and DAHM loader mods. Loader dependency warnings use those game-specific checks instead of treating every dependency as a normal folder install.
+
+## Priority
+
+PAYDAY: The Heist directory mods are not renamed for priority. Organize them in Modrex, but follow loader and mod author instructions for conflict rules.
