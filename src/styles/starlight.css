@@ -2,9 +2,10 @@
 @import './tokens/colors.css';
 @import './tokens/typography.css';
 @import './tokens/spacing.css';
+@import './tokens/base.css';
 
 :root,
-:root[data-theme='light'] {
+:root[data-theme='dark'] {
     color-scheme: dark;
     --sl-font: var(--font-sans);
     --sl-font-mono: var(--font-mono);
@@ -44,12 +45,6 @@ html {
 
 body {
     background: var(--color-surface);
-}
-
-.site-title {
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    letter-spacing: var(--tracking-display);
 }
 
 .header {

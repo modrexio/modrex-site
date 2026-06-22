@@ -8,13 +8,18 @@ export default defineConfig({
     site: 'https://modrex.net',
     integrations: [
         starlight({
-            title: 'Modrex Docs',
+            title: 'Modrex',
             description:
                 'Documentation for installing, managing, and troubleshooting mods with Modrex.',
             favicon: '/favicon.ico',
             titleDelimiter: '-',
             customCss: ['./src/styles/starlight.css'],
             disable404Route: true,
+            components: {
+                SiteTitle: './src/components/starlight/SiteTitle.astro',
+                ThemeProvider: './src/components/starlight/DarkThemeProvider.astro',
+                ThemeSelect: './src/components/starlight/ThemeSelect.astro',
+            },
             social: [
                 { icon: 'github', label: 'GitHub', href: 'https://github.com/modrexio/modrex' },
                 { icon: 'discord', label: 'Discord', href: 'https://discord.gg/tenzpx8JRM' },
