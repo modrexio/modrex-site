@@ -15,26 +15,57 @@
 
 <script is:inline>
     ;(function () {
-        const consent = localStorage.getItem('cookie_consent')
+        const consentKey = 'cookie_consent'
+        const getConsent = function () {
+            try {
+                return window.localStorage.getItem(consentKey)
+            } catch {
+                return null
+            }
+        }
+        const setConsent = function (value) {
+            try {
+                window.localStorage.setItem(consentKey, value)
+            } catch {
+                // localStorage can be unavailable in hardened browser modes.
+            }
+        }
+        const grantAnalytics = function () {
+            if (typeof window.gtag === 'function') {
+                window.gtag('consent', 'update', {
+                    analytics_storage: 'granted',
+                    ad_storage: 'denied',
+                    ad_user_data: 'denied',
+                    ad_personalization: 'denied',
+                })
+            }
+        }
+
+        const consent = getConsent()
         if (consent === 'granted') {
-            if (typeof window.gtag === 'function')
-                window.gtag('consent', 'update', { analytics_storage: 'granted' })
+            grantAnalytics()
             return
         }
         if (consent === 'denied') return
 
         const banner = document.getElementById('cookie-banner')
-        if (banner) banner.hidden = false
+        const acceptButton = document.getElementById('cookie-accept')
+        const declineButton = document.getElementById('cookie-decline')
+        if (!banner || !acceptButton || !declineButton) return
 
-        document.getElementById('cookie-accept').addEventListener('click', function () {
-            localStorage.setItem('cookie_consent', 'granted')
-            if (typeof window.gtag === 'function')
-                window.gtag('consent', 'update', { analytics_storage: 'granted' })
+        banner.hidden = false
+
+        acceptButton.addEventListener('click', function () {
+            setConsent('granted')
+            grantAnalytics()
+            if (typeof window.modrexTrackPageView === 'function') {
+                window.modrexTrackPageView()
+            }
             banner.hidden = true
         })
 
-        document.getElementById('cookie-decline').addEventListener('click', function () {
-            localStorage.setItem('cookie_consent', 'denied')
+        declineButton.addEventListener('click', function () {
+            setConsent('denied')
             banner.hidden = true
         })
     })()
