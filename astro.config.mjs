@@ -52,13 +52,6 @@ export default defineConfig({
                     label: 'Reference',
                     items: [{ slug: 'docs/settings' }, { slug: 'docs/troubleshooting' }],
                 },
-                {
-                    label: 'Links',
-                    items: [
-                        { label: 'Home', link: '/' },
-                        { label: 'Download', link: '/#download' },
-                    ],
-                },
             ],
             head: [
                 {

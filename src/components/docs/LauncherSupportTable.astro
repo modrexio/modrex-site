@@ -1,5 +1,6 @@
 ---
 import { allLaunchers, getDocsGame, type DocsGameId } from '../../data/docsGames'
+import SupportBadge from './SupportBadge.astro'
 
 interface Props {
     game: DocsGameId
@@ -9,7 +10,7 @@ const game = getDocsGame(Astro.props.game)
 const supportedLaunchers = new Set(game.launchers)
 ---
 
-<table>
+<table class="docs-data-table">
     <thead>
         <tr>
             <th>Launcher</th>
@@ -21,7 +22,9 @@ const supportedLaunchers = new Set(game.launchers)
             allLaunchers.map((launcher) => (
                 <tr>
                     <td>{launcher}</td>
-                    <td>{supportedLaunchers.has(launcher) ? 'Yes' : 'No'}</td>
+                    <td>
+                        <SupportBadge supported={supportedLaunchers.has(launcher)} />
+                    </td>
                 </tr>
             ))
         }

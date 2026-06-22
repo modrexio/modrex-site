@@ -1,8 +1,9 @@
 ---
 import { allLaunchers, docsGames } from '../../data/docsGames'
+import SupportBadge from './SupportBadge.astro'
 ---
 
-<table>
+<table class="docs-data-table">
     <thead>
         <tr>
             <th>Game</th>
@@ -15,7 +16,9 @@ import { allLaunchers, docsGames } from '../../data/docsGames'
                 <tr>
                     <td>{game.name}</td>
                     {allLaunchers.map((launcher) => (
-                        <td>{game.launchers.includes(launcher) ? 'Yes' : 'No'}</td>
+                        <td>
+                            <SupportBadge supported={game.launchers.includes(launcher)} />
+                        </td>
                     ))}
                 </tr>
             ))
