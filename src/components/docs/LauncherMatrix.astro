@@ -1,0 +1,24 @@
+---
+import { allLaunchers, docsGames } from '../../data/docsGames'
+---
+
+<table>
+    <thead>
+        <tr>
+            <th>Game</th>
+            {allLaunchers.map((launcher) => <th>{launcher}</th>)}
+        </tr>
+    </thead>
+    <tbody>
+        {
+            docsGames.map((game) => (
+                <tr>
+                    <td>{game.name}</td>
+                    {allLaunchers.map((launcher) => (
+                        <td>{game.launchers.includes(launcher) ? 'Yes' : 'No'}</td>
+                    ))}
+                </tr>
+            ))
+        }
+    </tbody>
+</table>
