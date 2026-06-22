@@ -5,23 +5,18 @@ sidebar:
     order: 40
 ---
 
+import LauncherSupportTable from '../../../../components/docs/LauncherSupportTable.astro'
+import ModTargetsTable from '../../../../components/docs/ModTargetsTable.astro'
+
 Crime Boss support uses the official ModKit install location for new installs while still recognizing legacy loose `.pak` installs and UE4SS Lua mods.
 
 ## Launchers
 
-| Launcher   | Support |
-| ---------- | ------- |
-| Steam      | Yes     |
-| Epic Games | Yes     |
-| Xbox App   | No      |
+<LauncherSupportTable game="cb" />
 
 ## Mod targets
 
-| Target               | Path under game folder          | Notes                                                                                                             |
-| -------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| Official ModKit mods | `CrimeBoss/Mods`                | Primary target for new installs. Modrex creates the expected folder structure around extracted files when needed. |
-| Legacy pak mods      | `CrimeBoss/Content/Paks/~mods`  | Used for pre-existing loose `.pak` installs and loose-triplet mods.                                               |
-| UE4SS mods           | `CrimeBoss/Binaries/Win64/Mods` | Used for Lua mods when UE4SS is installed. Bundled UE4SS framework modules are excluded from the installed list.  |
+<ModTargetsTable game="cb" />
 
 ## Priority
 

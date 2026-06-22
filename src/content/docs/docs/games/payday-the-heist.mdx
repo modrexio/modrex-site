@@ -5,22 +5,18 @@ sidebar:
     order: 30
 ---
 
+import LauncherSupportTable from '../../../../components/docs/LauncherSupportTable.astro'
+import ModTargetsTable from '../../../../components/docs/ModTargetsTable.astro'
+
 PAYDAY: The Heist support covers BLT mods, DAHM sub-mods, and asset replacement packs.
 
 ## Launchers
 
-| Launcher   | Support |
-| ---------- | ------- |
-| Steam      | Yes     |
-| Epic Games | No      |
-| Xbox App   | No      |
+<LauncherSupportTable game="pdth" />
 
 ## Mod targets
 
-| Target             | Path under game folder | Notes                                                                                                         |
-| ------------------ | ---------------------- | ------------------------------------------------------------------------------------------------------------- |
-| BLT and DAHM mods  | `mods`                 | Modrex recognizes BLT folders with `mod.txt` and DAHM sub-mods with `base.lua` when they match the mod index. |
-| Asset replacements | `assets/mod_overrides` | Marker-less asset replacement folders are routed here.                                                        |
+<ModTargetsTable game="pdth" />
 
 ## Loaders
 

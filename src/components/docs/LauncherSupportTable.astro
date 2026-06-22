@@ -1,0 +1,29 @@
+---
+import { allLaunchers, getDocsGame, type DocsGameId } from '../../data/docsGames'
+
+interface Props {
+    game: DocsGameId
+}
+
+const game = getDocsGame(Astro.props.game)
+const supportedLaunchers = new Set(game.launchers)
+---
+
+<table>
+    <thead>
+        <tr>
+            <th>Launcher</th>
+            <th>Support</th>
+        </tr>
+    </thead>
+    <tbody>
+        {
+            allLaunchers.map((launcher) => (
+                <tr>
+                    <td>{launcher}</td>
+                    <td>{supportedLaunchers.has(launcher) ? 'Yes' : 'No'}</td>
+                </tr>
+            ))
+        }
+    </tbody>
+</table>

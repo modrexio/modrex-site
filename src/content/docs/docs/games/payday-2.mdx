@@ -5,23 +5,18 @@ sidebar:
     order: 20
 ---
 
+import LauncherSupportTable from '../../../../components/docs/LauncherSupportTable.astro'
+import ModTargetsTable from '../../../../components/docs/ModTargetsTable.astro'
+
 PAYDAY 2 support covers BLT mods, BeardLib mods, asset replacement packs, and recognized content packs that install inside a host mod.
 
 ## Launchers
 
-| Launcher   | Support |
-| ---------- | ------- |
-| Steam      | Yes     |
-| Epic Games | Yes     |
-| Xbox App   | No      |
+<LauncherSupportTable game="pd2" />
 
 ## Mod targets
 
-| Target                | Path under game folder     | Notes                                                                                                  |
-| --------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------ |
-| BLT and BeardLib mods | `mods`                     | Modrex recognizes folders with `mod.txt` or `main.xml`.                                                |
-| Asset replacements    | `assets/mod_overrides`     | Marker-less folders are routed here when they match the mod_overrides layout.                          |
-| Host mod packs        | Inside the host mod folder | Some packs install inside another mod, such as Menu Backgrounds packs. Modrex tracks these separately. |
+<ModTargetsTable game="pd2" />
 
 ## Loaders
 

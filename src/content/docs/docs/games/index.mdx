@@ -6,14 +6,11 @@ sidebar:
     order: 1
 ---
 
+import GameSupportTable from '../../../../components/docs/GameSupportTable.astro'
+
 Modrex keeps app settings, launcher choice, launch options, installed mods, folders, and paths separate for each game. Use the page for your selected game when a workflow depends on install folders, loader requirements, or priority behavior.
 
-| Game                                              | Launchers                   | Primary mod targets                                                                    |
-| ------------------------------------------------- | --------------------------- | -------------------------------------------------------------------------------------- |
-| [PAYDAY 3](/docs/games/payday-3)                  | Steam, Epic Games, Xbox App | `.pak` files in `~mods`; UE4SS Lua mods when the loader is installed                   |
-| [PAYDAY 2](/docs/games/payday-2)                  | Steam, Epic Games           | BLT/BeardLib folders in `mods`; asset replacements in `assets/mod_overrides`           |
-| [PAYDAY: The Heist](/docs/games/payday-the-heist) | Steam                       | BLT/DAHM folders in `mods`; asset replacements in `assets/mod_overrides`               |
-| [Crime Boss: Rockay City](/docs/games/crime-boss) | Steam, Epic Games           | Official ModKit folders in `CrimeBoss/Mods`; legacy loose `.pak` files; UE4SS Lua mods |
+<GameSupportTable />
 
 ## What changes per game
 
