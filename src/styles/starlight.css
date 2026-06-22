@@ -1,0 +1,87 @@
+@import './tokens/fonts.css';
+@import './tokens/colors.css';
+@import './tokens/typography.css';
+@import './tokens/spacing.css';
+
+:root,
+:root[data-theme='light'] {
+    color-scheme: dark;
+    --sl-font: var(--font-sans);
+    --sl-font-mono: var(--font-mono);
+    --sl-content-width: 48rem;
+    --sl-sidebar-width: 17rem;
+    --sl-nav-height: 3.75rem;
+
+    --sl-color-white: var(--color-text);
+    --sl-color-gray-1: var(--color-text);
+    --sl-color-gray-2: var(--color-text-muted);
+    --sl-color-gray-3: var(--color-text-subtle);
+    --sl-color-gray-4: var(--color-surface-light);
+    --sl-color-gray-5: var(--color-surface-active);
+    --sl-color-gray-6: var(--color-surface-hover);
+    --sl-color-black: var(--color-surface);
+
+    --sl-color-accent-low: var(--accent-tint-20);
+    --sl-color-accent: var(--color-accent);
+    --sl-color-accent-high: var(--color-accent-bright);
+    --sl-color-text: var(--color-text-muted);
+    --sl-color-text-accent: var(--color-accent-bright);
+    --sl-color-text-invert: var(--on-accent);
+    --sl-color-bg: var(--color-surface);
+    --sl-color-bg-nav: var(--color-surface);
+    --sl-color-bg-sidebar: var(--color-surface-raised);
+    --sl-color-bg-inline-code: var(--color-surface-hover);
+    --sl-color-bg-accent: var(--color-accent);
+    --sl-color-hairline-light: var(--color-border);
+    --sl-color-hairline: var(--color-border);
+    --sl-color-hairline-shade: var(--color-surface);
+    --sl-color-backdrop-overlay: var(--scrim);
+}
+
+html {
+    background: var(--color-surface);
+}
+
+body {
+    background: var(--color-surface);
+}
+
+.site-title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    letter-spacing: var(--tracking-display);
+}
+
+.header {
+    border-bottom-color: var(--color-border);
+}
+
+.sidebar-content {
+    border-inline-end-color: var(--color-border);
+}
+
+.sl-markdown-content :is(h1, h2, h3, h4) {
+    color: var(--color-text);
+}
+
+.sl-markdown-content a:not(:where(.not-content *)) {
+    color: var(--color-accent-bright);
+}
+
+.sl-markdown-content code:not(:where(pre *)) {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+}
+
+.sl-markdown-content table {
+    border-color: var(--color-border);
+}
+
+.sl-markdown-content :is(th, td) {
+    border-color: var(--color-border);
+}
+
+.sl-markdown-content th {
+    background: var(--color-surface-raised);
+    color: var(--color-text);
+}
