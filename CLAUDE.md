@@ -115,7 +115,7 @@ At `≤768px`, `.nav-links` and `.nav-right` are hidden and a hamburger button a
 
 - Nav structure is in `src/lib/docs-nav.ts` — update this when adding/removing doc pages.
 - `src/components/docs/Callout.astro` is the only custom MDX component. Import and use it in MDX pages as `<Callout>` (default `type="info"`) or `<Callout type="warning">`. It must be imported at the top of each MDX file that uses it.
-- `src/pages/docs/index.astro` redirects to `/docs/getting-started`.
+- `/docs/` is a real Starlight page (`src/content/docs/docs/index.mdx`), not a redirect — it's the docs landing page; `/docs/getting-started` is the separate install guide it links to.
 - `src/pages/docs/[...slug].astro` renders all MDX pages using Astro's content layer `render()` API.
 - `DocsLayout` renders `h1` from `title` and lead paragraph from `description` frontmatter — don't repeat these inside the MDX body.
 - Table yes/no cells use shields.io badges: `![yes](https://img.shields.io/badge/Yes-brightgreen)` and `![no](https://img.shields.io/badge/No-red)`.
