@@ -31,14 +31,22 @@
             }
         }
         const grantAnalytics = function () {
-            if (typeof window.gtag === 'function') {
-                window.gtag('consent', 'update', {
-                    analytics_storage: 'granted',
-                    ad_storage: 'denied',
-                    ad_user_data: 'denied',
-                    ad_personalization: 'denied',
-                })
-            }
+            if (typeof window.gtag !== 'function') return
+            window.gtag('consent', 'update', {
+                analytics_storage: 'granted',
+                ad_storage: 'denied',
+                ad_user_data: 'denied',
+                ad_personalization: 'denied',
+            })
+            // Enhanced measurement's automatic page_view only waits 500ms for a
+            // consent signal (wait_for_update in BaseLayout.astro), and this banner
+            // can grant consent well after that on a slow-loading page, so fire the
+            // page_view manually instead of relying on the automatic one.
+            window.gtag('event', 'page_view', {
+                page_title: document.title,
+                page_location: window.location.href,
+                page_path: window.location.pathname + window.location.search,
+            })
         }
 
         const consent = getConsent()
