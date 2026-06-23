@@ -58,9 +58,6 @@
         acceptButton.addEventListener('click', function () {
             setConsent('granted')
             grantAnalytics()
-            if (typeof window.modrexTrackPageView === 'function') {
-                window.modrexTrackPageView()
-            }
             banner.hidden = true
         })
 
