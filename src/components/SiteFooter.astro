@@ -4,23 +4,45 @@
 
 <footer>
     <div class="wrap footer-inner">
-        <div>
+        <div class="footer-brand">
             <a href="/" class="modrex-wordmark" style="font-size: 20px">MOD<span>REX</span></a>
             <p class="legal">
                 A free, open-source desktop mod manager powered by modworkshop. Not affiliated with
                 any game studio or publisher.
             </p>
         </div>
-        <div class="links">
-            <a href="https://github.com/modrexio/modrex" target="_blank" rel="noopener">GitHub</a>
-            <a href="/docs/">Docs</a>
-            <a href="https://modworkshop.net/g/payday-3" target="_blank" rel="noopener"
-                >modworkshop</a
-            >
-            <a href="https://github.com/modrexio/modrex/issues" target="_blank" rel="noopener"
-                >Report a bug</a
-            >
-            <a href="https://discord.gg/tenzpx8JRM" target="_blank" rel="noopener">Discord</a>
+        <div class="footer-right">
+            <div class="links">
+                <a href="/docs/">Docs</a>
+                <a href="https://modworkshop.net/g/payday-3" target="_blank" rel="noopener"
+                    >modworkshop</a
+                >
+                <a href="https://github.com/modrexio/modrex/issues" target="_blank" rel="noopener"
+                    >Report a bug</a
+                >
+            </div>
+            <div class="social">
+                <a
+                    href="https://github.com/modrexio/modrex"
+                    class="social-link"
+                    target="_blank"
+                    rel="noopener"
+                    aria-label="GitHub"
+                    title="GitHub"
+                >
+                    <span class="social-icon github" aria-hidden="true"></span>
+                </a>
+                <a
+                    href="https://discord.gg/tenzpx8JRM"
+                    class="social-link"
+                    target="_blank"
+                    rel="noopener"
+                    aria-label="Discord"
+                    title="Discord"
+                >
+                    <span class="social-icon discord" aria-hidden="true"></span>
+                </a>
+            </div>
         </div>
     </div>
 </footer>
@@ -46,6 +68,13 @@
         margin: 10px 0 0;
     }
 
+    .footer-right {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        flex-wrap: wrap;
+    }
+
     .links {
         display: flex;
         gap: 24px;
@@ -60,5 +89,57 @@
 
     .links a:hover {
         color: var(--color-text);
+    }
+
+    .social {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .social-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        flex: 0 0 34px;
+        border-radius: var(--radius-sm);
+        color: var(--color-text-muted);
+        text-decoration: none;
+        transition: var(--transition-colors);
+    }
+
+    .social-link:hover {
+        color: var(--color-text);
+        background: var(--color-surface-hover);
+    }
+
+    .social-link:focus-visible {
+        outline: 2px solid var(--color-accent-bright);
+        outline-offset: 2px;
+    }
+
+    .social-icon {
+        display: block;
+        width: 18px;
+        height: 18px;
+        background: currentColor;
+        mask-position: center;
+        mask-repeat: no-repeat;
+        mask-size: contain;
+        -webkit-mask-position: center;
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-size: contain;
+    }
+
+    .social-icon.github {
+        mask-image: url('/icons/github.svg');
+        -webkit-mask-image: url('/icons/github.svg');
+    }
+
+    .social-icon.discord {
+        mask-image: url('/icons/discord.svg');
+        -webkit-mask-image: url('/icons/discord.svg');
     }
 </style>
