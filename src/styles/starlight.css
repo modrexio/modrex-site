@@ -265,6 +265,11 @@ body {
     color: var(--color-text);
 }
 
+#_top {
+    font-family: var(--font-display);
+    letter-spacing: var(--tracking-display);
+}
+
 .sl-markdown-content a:not(:where(.not-content *)) {
     color: var(--color-accent-bright);
 }
