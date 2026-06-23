@@ -1,4 +1,12 @@
 ---
+import type { Release } from '../lib/github'
+
+interface Props {
+    release?: Release | null
+}
+
+const { release = null } = Astro.props
+
 const shots = [
     { src: '/browse-mods.png', alt: 'Browse mods' },
     { src: '/choose-game.png', alt: 'Choose game' },
@@ -31,6 +39,15 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
                 </a>
                 <a href="/#download" class="btn-lg secondary other-platforms">Other platforms</a>
             </div>
+            {
+                release && (
+                    <a href={release.html_url} target="_blank" rel="noopener" class="version-pill">
+                        <span class="version-pill-tag">{release.tag_name}</span>
+                        <span class="version-pill-divider" />
+                        Release notes
+                    </a>
+                )
+            }
             <p class="hero-meta">
                 Free and open source. Powered by
                 <a href="https://modworkshop.net" target="_blank" rel="noopener">modworkshop</a>
@@ -308,6 +325,38 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
         gap: 12px;
         margin-top: 32px;
         flex-wrap: wrap;
+    }
+
+    .version-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 20px;
+        padding: 7px 16px;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-sm);
+        background: var(--color-surface-raised);
+        color: var(--text-secondary);
+        font-size: 13px;
+        text-decoration: none;
+        transition: var(--transition-colors);
+    }
+
+    .version-pill:hover {
+        background: var(--color-surface-hover);
+        border-color: var(--color-surface-light);
+        color: var(--color-text);
+    }
+
+    .version-pill-tag {
+        font-weight: 600;
+        color: var(--color-text);
+    }
+
+    .version-pill-divider {
+        width: 1px;
+        height: 14px;
+        background: var(--color-border);
     }
 
     .hero-meta {

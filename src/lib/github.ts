@@ -5,6 +5,7 @@ export interface Release {
     name: string
     body: string
     published_at: string
+    html_url: string
     assets: ReleaseAsset[]
 }
 
