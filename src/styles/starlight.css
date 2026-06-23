@@ -265,6 +265,22 @@ body {
     color: var(--color-text);
 }
 
+/* Starlight's defaults snap instantly with no transition. */
+.sl-link-card,
+.pagination-links a {
+    transition: var(--transition-colors);
+}
+
+.sl-link-card .icon {
+    transition: color var(--duration) var(--ease);
+}
+
+.sl-link-card:hover,
+.pagination-links a:hover {
+    background: var(--color-surface-hover);
+    border-color: var(--color-surface-light);
+}
+
 #_top {
     font-family: var(--font-display);
     letter-spacing: var(--tracking-display);
