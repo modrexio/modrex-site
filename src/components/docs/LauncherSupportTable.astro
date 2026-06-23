@@ -1,6 +1,7 @@
 ---
 import { allLaunchers, getDocsGame, type DocsGameId } from '../../data/docsGames'
 import SupportBadge from './SupportBadge.astro'
+import LauncherIcon from './LauncherIcon.astro'
 
 interface Props {
     game: DocsGameId
@@ -21,7 +22,10 @@ const supportedLaunchers = new Set(game.launchers)
         {
             allLaunchers.map((launcher) => (
                 <tr>
-                    <td>{launcher}</td>
+                    <td>
+                        <LauncherIcon launcher={launcher} />
+                        {launcher}
+                    </td>
                     <td>
                         <SupportBadge supported={supportedLaunchers.has(launcher)} />
                     </td>
