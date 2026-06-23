@@ -101,12 +101,19 @@ body {
     starlight-menu-button button {
         top: 12px;
         inset-inline-end: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 36px;
         height: 36px;
         border-radius: var(--radius-sm);
         background: var(--color-surface-hover);
         color: var(--color-text);
         box-shadow: none;
+    }
+
+    starlight-menu-button button svg {
+        transform: scale(1.7);
     }
 
     starlight-menu-button[aria-expanded='true'] button {
