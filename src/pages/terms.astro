@@ -2,8 +2,6 @@
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Nav from '../components/Nav.astro'
 import SiteFooter from '../components/SiteFooter.astro'
-
-const lastUpdated = 'June 26, 2025'
 ---
 
 <BaseLayout
@@ -14,7 +12,6 @@ const lastUpdated = 'June 26, 2025'
     <main class="legal-page">
         <div class="wrap">
             <div class="prose">
-                <p class="eyebrow">Last updated: {lastUpdated}</p>
                 <h1>Terms of Service</h1>
 
                 <p>
@@ -96,13 +93,6 @@ const lastUpdated = 'June 26, 2025'
 
     .prose {
         max-width: 680px;
-    }
-
-    .eyebrow {
-        margin: 0 0 16px;
-        font-size: 13px;
-        color: var(--text-tertiary);
-        font-family: var(--font-mono);
     }
 
     h1 {
