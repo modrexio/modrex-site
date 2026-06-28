@@ -130,6 +130,15 @@ At `≤768px`, `.nav-links` and `.nav-right` are hidden and a hamburger button a
 Reusable skills live in `.agents/skills/` and are listed in `AGENTS.md`. Available as Claude Code slash commands:
 
 - `/commit` — read the current diff and propose a conventional commit message; waits for confirmation before committing.
+- `/deslop` — audit the diff for AI-generated slop and fix each issue found.
+
+## Local Pages Function testing
+
+```bash
+pnpm build && npx wrangler pages dev dist   # test /api/collect locally
+```
+
+`astro check` and `pnpm typecheck` do not cover `functions/` — TypeScript errors there are only caught at deploy time or via manual `tsc` invocation.
 
 ## Rules
 
