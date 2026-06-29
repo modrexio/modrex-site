@@ -9,7 +9,8 @@ import Callout from '../../../components/docs/Callout.astro'
 
 The **Browse** tab shows the modworkshop catalog for the active game. Click any mod to open its
 detail page, then click **Install**. Modrex downloads the file, extracts it if needed, and places
-it in the correct location automatically.
+it in the correct location automatically. The Install button shows a live download percentage and
+progress bar while the file is transferring.
 
 Use the search box to filter by name, the category dropdown to narrow the catalog, and the sort
 control to order results by last updated, most downloaded, most liked, newest, or name.
@@ -32,6 +33,10 @@ deselect any you don't want.
 Some mods require a loader such as SuperBLT, PDTHModOverrides, DAHM, or UE4SS. When Modrex can
 install a required loader directly, the dependency warning includes an install action. If a
 dependency is hosted offsite, Modrex opens the external download page so you can install it manually.
+
+When multiple dependencies can be auto-installed, the dialog shows an **Install all** button to
+handle them in one click. Each install button shows a progress indicator while the download is
+running, and clicking a dependency's row opens its mod detail page.
 
 Some PAYDAY 2 content packs belong inside another host mod instead of directly inside the game.
 When Modrex recognizes that pattern, it prompts you to install the required host mod and then places
@@ -68,7 +73,9 @@ disk and the mod is removed from Modrex's state.
 ## Reinstalling and updating
 
 Click **Reinstall** on a mod to re-download and replace its current file. If Modrex detects newer
-versions for installed mods, use the update prompt to review and install them in bulk.
+versions for installed mods, use the update prompt to review and install them in bulk. The
+**Update All** button shows a progress counter (`1 / N`, `2 / N`, …) while working through the
+queue.
 
 ## News
 
