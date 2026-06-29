@@ -14,9 +14,9 @@ function formatSize(bytes: number): string {
 type DlFile = { name: string; url: string; label: string; size?: string }
 
 const exeAsset = release?.assets.find((a) => a.name.endsWith('.exe'))
-const appImageAsset = release?.assets.find((a) => a.name.endsWith('.AppImage'))
-const debAsset = release?.assets.find((a) => a.name.endsWith('.deb'))
-const rpmAsset = release?.assets.find((a) => a.name.endsWith('.rpm'))
+const appImageAsset = release?.assets.find((a) => a.name === 'modrex_x86_64.AppImage')
+const debAsset = release?.assets.find((a) => a.name === 'modrex_x86_64.deb')
+const rpmAsset = release?.assets.find((a) => a.name === 'modrex_x86_64.rpm')
 
 const fallbackUrl = 'https://github.com/modrexio/modrex/releases/latest'
 
