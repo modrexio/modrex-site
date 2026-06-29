@@ -28,7 +28,8 @@ const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
     name: 'Modrex',
-    description: 'Free, open-source desktop mod manager for game mods.',
+    description:
+        'Free, open-source mod manager for PAYDAY 3, PAYDAY 2, PAYDAY: The Heist, and Crime Boss: Rockay City. Browse modworkshop, install mods in one click, and launch modded games from the app.',
     operatingSystem: ['Windows', 'Linux'],
     applicationCategory: 'GameApplication',
     offers: {
@@ -42,7 +43,14 @@ const jsonLd = {
 }
 ---
 
-<BaseLayout title="Modrex">
+<BaseLayout
+    title="Modrex"
+    description="Free, open-source mod manager for PAYDAY 3, PAYDAY 2, PAYDAY: The Heist, and Crime Boss: Rockay City. Browse modworkshop, install mods in one click, and launch modded games from the app."
+    ogImage={new URL('/Browse%20Mods%20Window.png', Astro.site).href}
+    ogImageWidth={2560}
+    ogImageHeight={1368}
+>
+    <link rel="preload" as="image" href="/Game%20Picker%20Window.png" slot="head" />
     <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} slot="head" />
     <Nav release={release} />
     <Hero release={release} />
