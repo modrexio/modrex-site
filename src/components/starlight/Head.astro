@@ -1,0 +1,51 @@
+---
+import Default from '@astrojs/starlight/components/Head.astro'
+
+const { entry } = Astro.props as { entry: { data: { title: string } } }
+
+// Build breadcrumb from URL path segments
+// e.g. /docs/games/crime-boss → ['docs', 'games', 'crime-boss']
+const segments = Astro.url.pathname.replace(/\/$/, '').split('/').filter(Boolean)
+
+const SECTION_LABELS: Record<string, string> = {
+    games: 'Games',
+    concepts: 'Concepts',
+}
+
+const items: Array<{ name: string; item?: string }> = [
+    { name: 'Docs', item: new URL('/docs/', Astro.site).href },
+]
+
+if (segments.length === 2) {
+    // /docs/getting-started or /docs/games (section index)
+    items.push({ name: entry.data.title })
+} else if (segments.length >= 3) {
+    // /docs/games/crime-boss or /docs/concepts/archives-and-loaders
+    const section = segments[1]
+    const sectionLabel = SECTION_LABELS[section]
+    if (sectionLabel) {
+        items.push({ name: sectionLabel, item: new URL(`/docs/${section}/`, Astro.site).href })
+    }
+    items.push({ name: entry.data.title })
+}
+
+const emitBreadcrumb = items.length >= 2
+
+const breadcrumb = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((b, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: b.name,
+        ...(b.item ? { item: b.item } : {}),
+    })),
+}
+---
+
+<Default {...Astro.props} />
+{
+    emitBreadcrumb && (
+        <script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumb)} />
+    )
+}

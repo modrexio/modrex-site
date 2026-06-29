@@ -1,6 +1,65 @@
 ---
 title: Troubleshooting
 description: Solutions to the most common problems with Modrex and PAYDAY mods.
+head:
+    - tag: script
+      attrs:
+          type: application/ld+json
+      content: |
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Why are my mods not loading in PAYDAY 3?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The most common cause is a missing -fileopenlog launch argument. Add -fileopenlog to Settings - Launch Options. Without it, Unreal Engine 5 does not scan the ~mods folder and no pak mods will load."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Modrex can't detect my game — what do I do?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Go to Settings - Game Path and click Browse. Navigate to the game's installation root folder and click Select Folder. Modrex will validate and save the path."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What does the Missing file badge on a mod mean?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Modrex references a file or folder that no longer exists on disk, usually after manually deleting files or moving your game folder. Either Reinstall the mod or right-click and select Uninstall to remove the stale entry."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Modrex says it cannot install an archive — why?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The archive likely belongs inside another mod or has a layout that does not identify a supported install target. Follow the author's instructions shown in the dialog, then install the files manually if needed."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Modrex won't launch after a Windows update",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Xbox Game Pass installs can lose their file permissions after major Windows updates. Run Modrex as administrator once to restore access, then relaunch normally."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Where is the Modrex log file?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "On Windows: %APPDATA%\\Modrex\\logs\\modrex.log. On Linux: ~/.config/modrex/logs/modrex.log. You can also open it from Settings - Open log file."
+                }
+              }
+            ]
+          }
 ---
 
 import Callout from '../../../components/docs/Callout.astro'

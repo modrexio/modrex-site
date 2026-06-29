@@ -16,6 +16,7 @@ export default defineConfig({
             customCss: ['./src/styles/starlight.css'],
             disable404Route: true,
             components: {
+                Head: './src/components/starlight/Head.astro',
                 Header: './src/components/starlight/Header.astro',
                 Sidebar: './src/components/starlight/Sidebar.astro',
                 ThemeProvider: './src/components/starlight/DarkThemeProvider.astro',
