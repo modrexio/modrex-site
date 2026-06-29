@@ -29,7 +29,7 @@ const windowsFiles: DlFile[] = exeAsset
               size: formatSize(exeAsset.size),
           },
       ]
-    : [{ name: 'Modrex_x64-setup.exe', url: fallbackUrl, label: 'Installer' }]
+    : [{ name: 'modrex_x86_64.exe', url: fallbackUrl, label: 'Installer' }]
 
 const linuxFiles: DlFile[] = [
     debAsset
@@ -39,7 +39,7 @@ const linuxFiles: DlFile[] = [
               label: 'Debian / Ubuntu',
               size: formatSize(debAsset.size),
           }
-        : { name: 'modrex_amd64.deb', url: fallbackUrl, label: 'Debian / Ubuntu' },
+        : { name: 'modrex_x86_64.deb', url: fallbackUrl, label: 'Debian / Ubuntu' },
     rpmAsset
         ? {
               name: rpmAsset.name,
@@ -47,7 +47,7 @@ const linuxFiles: DlFile[] = [
               label: 'Fedora / RHEL',
               size: formatSize(rpmAsset.size),
           }
-        : { name: 'modrex_amd64.rpm', url: fallbackUrl, label: 'Fedora / RHEL' },
+        : { name: 'modrex_x86_64.rpm', url: fallbackUrl, label: 'Fedora / RHEL' },
     appImageAsset
         ? {
               name: appImageAsset.name,
@@ -55,7 +55,7 @@ const linuxFiles: DlFile[] = [
               label: 'Universal',
               size: formatSize(appImageAsset.size),
           }
-        : { name: 'modrex.AppImage', url: fallbackUrl, label: 'Universal' },
+        : { name: 'modrex_x86_64.AppImage', url: fallbackUrl, label: 'Universal' },
 ]
 ---
 
