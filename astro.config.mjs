@@ -68,7 +68,9 @@ export default defineConfig({
             ],
         }),
         mdx(),
-        sitemap(),
+        sitemap({
+            filter: (page) => !page.includes('/privacy') && !page.includes('/terms'),
+        }),
     ],
     vite: {
         plugins: [tailwindcss()],
