@@ -61,3 +61,22 @@ Click a folder name to collapse or expand it. Collapsed state is saved between s
 
 Switch the Installed tab between grid and list layout using the view toggle in the toolbar. The
 choice is remembered per game.
+
+## Health Check
+
+The Health Check scans your entire installed library and groups any issues it finds by category.
+Open it from the toolbar on the Installed tab.
+
+Each category has its own tab and a bulk action in the footer:
+
+| Category             | What it flags                                                 | Bulk action   |
+| -------------------- | ------------------------------------------------------------- | ------------- |
+| Missing files        | Mods whose files are no longer on disk                        | Reinstall all |
+| Broken archives      | Mods whose installed file is a corrupt or unextracted archive | Reinstall all |
+| Outdated installs    | Mods with a version mismatch or a stale duplicate file        | Reinstall all |
+| Unrecognized mods    | Mods Modrex can't match to a modworkshop entry                | —             |
+| Missing dependencies | Mods whose required loader or dependency isn't installed      | Install all   |
+| Available updates    | Mods with a newer version on modworkshop                      | Update all    |
+
+You can also act on individual rows inside each tab. Installing a missing dependency updates the
+tab immediately so you can see what's still outstanding without closing the modal.
