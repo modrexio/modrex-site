@@ -1,43 +1,6 @@
 ---
 title: Installation
 description: Modrex is a desktop app for Windows and Linux. Download the build for your platform, pick a supported game, and start managing mods - there's no account to create.
-head:
-    - tag: script
-      attrs:
-          type: application/ld+json
-      content: |
-          {
-            "@context": "https://schema.org",
-            "@type": "HowTo",
-            "name": "How to install Modrex mod manager",
-            "description": "Download Modrex and start managing mods for PAYDAY 3, PAYDAY 2, PAYDAY: The Heist, and Crime Boss: Rockay City.",
-            "step": [
-              {
-                "@type": "HowToStep",
-                "position": "1",
-                "name": "Download and install",
-                "text": "Download the latest release from GitHub. On Windows, run the modrex_x86_64.exe installer. On Linux, install the .deb, .rpm, or .AppImage package for your distribution."
-              },
-              {
-                "@type": "HowToStep",
-                "position": "2",
-                "name": "Choose a game",
-                "text": "On first launch Modrex asks which game to manage. Supported games: PAYDAY 3, PAYDAY 2, PAYDAY: The Heist, and Crime Boss: Rockay City."
-              },
-              {
-                "@type": "HowToStep",
-                "position": "3",
-                "name": "Set the game path",
-                "text": "Modrex automatically scans for your game. If detection fails, open Settings, click Browse under Game Path, and select the game root folder."
-              },
-              {
-                "@type": "HowToStep",
-                "position": "4",
-                "name": "Configure launch options (PAYDAY 3)",
-                "text": "For PAYDAY 3 pak mods to work, add -fileopenlog to Settings - Launch Options so Unreal Engine scans the ~mods folder."
-              }
-            ]
-          }
 ---
 
 import Callout from '../../../components/docs/Callout.astro'
