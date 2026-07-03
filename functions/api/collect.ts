@@ -16,12 +16,32 @@
 // function's own outbound fetch egresses from (Cloudflare's network), not the
 // real visitor — since the request Google actually sees comes from Cloudflare,
 // not the desktop app's connection.
-export async function onRequestPost({ request }: { request: Request }): Promise<Response> {
+export async function onRequestPost({
+    request,
+    env,
+    waitUntil,
+}: {
+    request: Request
+    env: { MODREX_GA_MEASUREMENT_ID?: string }
+    waitUntil: (promise: Promise<unknown>) => void
+}): Promise<Response> {
     const incoming = new URL(request.url)
     const measurementId = incoming.searchParams.get('measurement_id')
     const apiSecret = incoming.searchParams.get('api_secret')
     if (!measurementId || !apiSecret) {
         return new Response('Missing measurement_id or api_secret', { status: 400 })
+    }
+    // Relay only to Modrex's own GA4 property so modrex.net can't be used as a generic,
+    // unauthenticated relay into arbitrary GA4 accounts. The exact id is a build-time secret in
+    // the desktop app (analytics.rs option_env MODREX_GA_MEASUREMENT_ID), so pin it here only
+    // when that same value is set as a Pages env var; otherwise fall back to requiring a
+    // well-formed GA4 id. measurement_id is not itself secret (it rides in every GA request).
+    const expectedId = env.MODREX_GA_MEASUREMENT_ID
+    const idAllowed = expectedId
+        ? measurementId === expectedId
+        : /^G-[A-Z0-9]{4,}$/.test(measurementId)
+    if (!idAllowed) {
+        return new Response('Unexpected measurement_id', { status: 403 })
     }
 
     const target = new URL('https://www.google-analytics.com/mp/collect')
@@ -45,20 +65,22 @@ export async function onRequestPost({ request }: { request: Request }): Promise<
         }
     }
 
-    try {
-        await fetch(target, {
+    // Fire-and-forget: the desktop client never reads this response and GA4 returns nothing
+    // useful, so there's no reason to make the client wait on Google's round trip. waitUntil
+    // keeps the worker alive until the fetch settles after we've already returned 204.
+    waitUntil(
+        fetch(target, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'User-Agent': request.headers.get('User-Agent') ?? '',
             },
             body,
+        }).catch(() => {
+            // GA4 never returns error codes for malformed payloads and the client never reads
+            // this response, so a failed upstream call has nothing to surface.
         })
-    } catch {
-        // GA4's own endpoint never returns error codes for malformed payloads
-        // either, and the desktop client doesn't read this response — there's
-        // nothing useful to surface even if the upstream call fails.
-    }
+    )
 
     return new Response(null, { status: 204 })
 }
