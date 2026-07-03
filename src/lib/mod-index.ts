@@ -1,34 +1,17 @@
-import { createRequire } from 'node:module'
-
-import initSqlJs from 'sql.js'
-
-import { INDEX_DB_URL, SUPPORTED_MODS_QUERY } from './mod-index-shared'
+import { INDEX_STATS_URL, type ModIndexStatsPayload } from './mod-index-shared'
 
 export interface ModIndexStats {
     supportedMods: number
 }
 
-const require = createRequire(import.meta.url)
-
+// Build-time only: read the recognized-mod count from the tiny index-stats.json asset that the
+// modrex-index pipeline publishes next to index.db. Downloading the full index.db here and
+// counting it with sql.js meant every build pulled the whole multi-megabyte database (which
+// grows with the catalog) just to render one number the JSON already carries. The browser
+// refresh in Features.astro already reads this same asset.
 export async function getModIndexStats(): Promise<ModIndexStats> {
-    const dbBytes = await downloadIndex()
-    const SQL = await initSqlJs({
-        locateFile: () => require.resolve('sql.js/dist/sql-wasm.wasm'),
-    })
-    const db = new SQL.Database(dbBytes)
-
-    try {
-        const result = db.exec(SUPPORTED_MODS_QUERY)
-        const supportedMods = Number(result[0]?.values[0]?.[0] ?? 0)
-        return { supportedMods }
-    } finally {
-        db.close()
-    }
-}
-
-async function downloadIndex(): Promise<Uint8Array> {
-    const res = await fetch(INDEX_DB_URL)
-    if (!res.ok) throw new Error(`Index download error: ${res.status}`)
-
-    return new Uint8Array(await res.arrayBuffer())
+    const res = await fetch(INDEX_STATS_URL)
+    if (!res.ok) throw new Error(`Index stats download error: ${res.status}`)
+    const stats = (await res.json()) as ModIndexStatsPayload
+    return { supportedMods: stats.supportedMods }
 }
