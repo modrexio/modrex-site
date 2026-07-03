@@ -123,12 +123,10 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
 
 <script>
     import { createIcons, ChevronLeft, ChevronRight, X } from 'lucide'
+    import { detectOs } from '../lib/os-detect'
     createIcons({ icons: { ChevronLeft, ChevronRight, X } })
 
-    const isMobile =
-        /Android|iPhone|iPad|iPod/.test(navigator.userAgent) ||
-        (navigator.maxTouchPoints > 1 && /Mac/.test(navigator.userAgent))
-    const isLinux = /Linux|X11/.test(navigator.userAgent) && !/Android/.test(navigator.userAgent)
+    const { isMobile, isLinux } = detectOs()
     const label = document.getElementById('hero-dl-label')
     const icon = document.getElementById('hero-dl-icon') as HTMLImageElement | null
     if (isMobile) {

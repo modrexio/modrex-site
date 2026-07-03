@@ -108,12 +108,11 @@ const linUrl =
 </nav>
 
 <script>
+    import { detectOs } from '../lib/os-detect'
+
     const navDlBtn = document.getElementById('nav-dl-btn') as HTMLAnchorElement | null
     const mobileDlBtn = document.getElementById('mobile-dl-btn') as HTMLAnchorElement | null
-    const isMobile =
-        /Android|iPhone|iPad|iPod/.test(navigator.userAgent) ||
-        (navigator.maxTouchPoints > 1 && /Mac/.test(navigator.userAgent))
-    const isLinux = /Linux|X11/.test(navigator.userAgent) && !/Android/.test(navigator.userAgent)
+    const { isMobile, isLinux } = detectOs()
     if (!isMobile && isLinux) {
         if (navDlBtn) navDlBtn.href = navDlBtn.dataset.lin ?? navDlBtn.href
         if (mobileDlBtn) mobileDlBtn.href = mobileDlBtn.dataset.lin ?? mobileDlBtn.href

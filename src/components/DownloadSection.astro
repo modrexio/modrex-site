@@ -122,12 +122,10 @@ const linuxFiles: DlFile[] = [
 
 <script>
     import { createIcons, Download } from 'lucide'
+    import { detectOs } from '../lib/os-detect'
     createIcons({ icons: { Download } })
 
-    const isMobile =
-        /Android|iPhone|iPad|iPod/.test(navigator.userAgent) ||
-        (navigator.maxTouchPoints > 1 && /Mac/.test(navigator.userAgent))
-    const isLinux = /Linux|X11/.test(navigator.userAgent) && !/Android/.test(navigator.userAgent)
+    const { isMobile, isLinux } = detectOs()
     if (!isMobile) {
         const cardId = isLinux ? 'dl-card-lin' : 'dl-card-win'
         const badgeId = isLinux ? 'badge-lin' : 'badge-win'
