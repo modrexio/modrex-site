@@ -15,8 +15,11 @@ const shots = [
     { src: '/Settings%20Window.png', alt: 'Settings' },
 ]
 
-// Infinite track: [clone-last, ...real shots, clone-first]
-const slots = [shots.at(-1)!, ...shots, shots[0]]
+// Infinite track with two clones per edge: a wrap step travels onto the first
+// clone, and the second keeps a neighbor sliver visible beyond it; with one
+// clone the viewport edge went blank during the wrap animation.
+const CLONES = 2
+const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
 ---
 
 <header class="hero">
@@ -63,13 +66,13 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
                 <div class="gallery-track" id="hero-track">
                     {
                         slots.map((s, i) => (
-                            <div class:list={['shot-card', { active: i === 1 }]}>
+                            <div class:list={['shot-card', { active: i === CLONES }]}>
                                 <img
                                     src={s.src}
                                     alt={s.alt}
                                     width="980"
                                     height="524"
-                                    loading={i === 1 ? 'eager' : 'lazy'}
+                                    loading={i === CLONES ? 'eager' : 'lazy'}
                                 />
                             </div>
                         ))
@@ -101,7 +104,7 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
                 <div class="viewer-track" id="viewer-track">
                     {
                         slots.map((s, i) => (
-                            <div class:list={['viewer-card', { active: i === 1 }]}>
+                            <div class:list={['viewer-card', { active: i === CLONES }]}>
                                 <img
                                     src={s.src}
                                     alt={s.alt}
@@ -147,87 +150,124 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
     const viewerOuter = document.getElementById('viewer-outer')!
     const viewerTrack = document.getElementById('viewer-track')!
     const viewerCards = Array.from(viewerTrack.querySelectorAll<HTMLElement>('.viewer-card'))
-    // slots: [clone-last(0), ...real shots, clone-first]
-    const REAL_FIRST = 1
-    const REAL_LAST = cards.length - 2
-    const realCards = cards.slice(REAL_FIRST, REAL_LAST + 1)
+    // slots: [...edge clones, ...real shots, ...edge clones]; the server marks
+    // the first real card active, so the clone count never needs restating here.
+    const REAL_FIRST = cards.findIndex((c) => c.classList.contains('active'))
+    const realCards = cards.slice(REAL_FIRST, cards.length - REAL_FIRST)
     const GAP = 16
-    let slotIndex = REAL_FIRST // start centered on slot 1 (shots[0])
-    let viewerSlotIndex = REAL_FIRST
-    let viewerAnimating = false
-    let animating = false
+    const STEP_MS = 450
+    const STEP_EASING = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
 
-    function cardW() {
-        return cards[REAL_FIRST].offsetWidth
-    }
+    // Steps are driven by the Web Animations API, not a CSS transition: the
+    // committed transform always holds the step's final position (the animation
+    // only overlays the travel), so an interrupted step can never strand the
+    // track mid-flight, and completion is a guaranteed callback instead of a
+    // transitionend event that is lost when a transition is canceled or never
+    // starts. That event loss is what used to freeze the gallery.
+    function createCarousel(
+        outerEl: HTMLElement,
+        trackEl: HTMLElement,
+        cardEls: HTMLElement[],
+        onSettle?: (index: number) => void
+    ) {
+        const REAL_LAST = cardEls.length - 1 - REAL_FIRST
+        const SPAN = REAL_LAST - REAL_FIRST + 1
+        let index = REAL_FIRST
+        let anim: Animation | null = null
 
-    function offsetFor(index: number) {
-        return (outer.offsetWidth - cardW()) / 2 - index * (cardW() + GAP)
-    }
-
-    function setActive(index: number) {
-        cards.forEach((c, i) => c.classList.toggle('active', i === index))
-    }
-
-    function setViewerActive(index: number) {
-        viewerCards.forEach((c, i) => c.classList.toggle('active', i === index))
-    }
-
-    function snapTo(index: number) {
-        track.style.transition = 'none'
-        cards.forEach((c) => (c.style.transition = 'none'))
-        slotIndex = index
-        track.style.transform = `translateX(${offsetFor(index)}px)`
-        setActive(index)
-        requestAnimationFrame(() =>
-            requestAnimationFrame(() => {
-                track.style.transition = ''
-                cards.forEach((c) => (c.style.transition = ''))
-            })
-        )
-    }
-
-    function go(dir: number) {
-        if (animating) return
-        animating = true
-        const next = slotIndex + dir
-        slotIndex = next
-        setActive(next)
-        track.style.transform = `translateX(${offsetFor(next)}px)`
-
-        function onEnd(e: TransitionEvent) {
-            if (e.target !== track || e.propertyName !== 'transform') return
-            track.removeEventListener('transitionend', onEnd)
-            // if we landed on a clone, silently snap to the real equivalent
-            if (next === 0) snapTo(REAL_LAST)
-            else if (next === cards.length - 1) snapTo(REAL_FIRST)
-            animating = false
+        const stride = () => cardEls[REAL_FIRST].offsetWidth + GAP
+        const offsetFor = (i: number) =>
+            (outerEl.offsetWidth - cardEls[REAL_FIRST].offsetWidth) / 2 - i * stride()
+        const currentX = () => {
+            const t = getComputedStyle(trackEl).transform
+            return t === 'none' ? 0 : new DOMMatrixReadOnly(t).m41
         }
-        track.addEventListener('transitionend', onEnd)
+
+        function setActive(i: number) {
+            cardEls.forEach((c, k) => c.classList.toggle('active', k === i))
+        }
+
+        // Instant reposition. Card transitions are suppressed for two frames so
+        // a clone-to-twin teleport doesn't blink the active highlight.
+        function place(i: number) {
+            anim?.cancel()
+            anim = null
+            cardEls.forEach((c) => (c.style.transition = 'none'))
+            index = i
+            setActive(i)
+            trackEl.style.transform = `translateX(${offsetFor(i)}px)`
+            requestAnimationFrame(() =>
+                requestAnimationFrame(() => cardEls.forEach((c) => (c.style.transition = '')))
+            )
+        }
+
+        // Commits the target transform, then animates the travel on top of it.
+        // A canceled animation needs no handler: the committed transform already
+        // holds the final position.
+        function animateTo(from: number) {
+            const to = offsetFor(index)
+            trackEl.style.transform = `translateX(${to}px)`
+            anim = trackEl.animate(
+                [{ transform: `translateX(${from}px)` }, { transform: `translateX(${to}px)` }],
+                { duration: STEP_MS, easing: STEP_EASING }
+            )
+            anim.onfinish = () => {
+                anim = null
+                // landed on a clone: silently continue from its real twin
+                if (index === REAL_FIRST - 1) place(REAL_LAST)
+                else if (index === REAL_LAST + 1) place(REAL_FIRST)
+                onSettle?.(index)
+            }
+        }
+
+        function step(dir: number) {
+            let from = currentX()
+            anim?.cancel()
+            anim = null
+            // A pending clone teleport (rapid clicks can outrun onfinish) folds
+            // in here: the same visual position expressed on the real twin.
+            if (index === REAL_FIRST - 1) {
+                index = REAL_LAST
+                from -= SPAN * stride()
+            } else if (index === REAL_LAST + 1) {
+                index = REAL_FIRST
+                from += SPAN * stride()
+            }
+            index += dir
+            setActive(index)
+            animateTo(from)
+        }
+
+        // Layout shifts mid-step (scrollbar toggling from lazy content, mobile
+        // URL bar, window resize) must not hard-complete the step: keep the
+        // motion and retarget it at the recomputed destination.
+        function relayout() {
+            if (!anim) {
+                place(index)
+                return
+            }
+            const from = currentX()
+            anim.cancel()
+            anim = null
+            animateTo(from)
+        }
+
+        return {
+            place,
+            step,
+            relayout,
+            get index() {
+                return index
+            },
+        }
     }
 
-    function viewerCardW() {
-        return viewerCards[REAL_FIRST].offsetWidth
-    }
-
-    function viewerOffsetFor(index: number) {
-        return (viewerOuter.offsetWidth - viewerCardW()) / 2 - index * (viewerCardW() + GAP)
-    }
-
-    function viewerSnapTo(index: number) {
-        viewerTrack.style.transition = 'none'
-        viewerCards.forEach((c) => (c.style.transition = 'none'))
-        viewerSlotIndex = index
-        viewerTrack.style.transform = `translateX(${viewerOffsetFor(index)}px)`
-        setViewerActive(index)
-        snapTo(index)
-        requestAnimationFrame(() =>
-            requestAnimationFrame(() => {
-                viewerTrack.style.transition = ''
-                viewerCards.forEach((c) => (c.style.transition = ''))
-            })
-        )
-    }
+    const gallery = createCarousel(outer, track, cards)
+    // The viewer mirrors its position onto the hero once a step settles, so
+    // closing the viewer leaves the hero on the same screenshot.
+    const viewerGallery = createCarousel(viewerOuter, viewerTrack, viewerCards, (i) =>
+        gallery.place(i)
+    )
 
     function openViewer(card: HTMLElement, index: number) {
         if (!card.classList.contains('active')) return
@@ -235,7 +275,7 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
         hero.classList.add('viewer-open')
         viewer.setAttribute('aria-hidden', 'false')
         document.body.style.overflow = 'hidden'
-        viewerSnapTo(REAL_FIRST + index)
+        viewerGallery.place(REAL_FIRST + index)
         document.getElementById('viewer-close')?.focus()
     }
 
@@ -246,50 +286,33 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
         document.body.style.overflow = ''
     }
 
-    function stepViewer(dir: number) {
-        if (viewerAnimating) return
-        viewerAnimating = true
-        const next = viewerSlotIndex + dir
-        viewerSlotIndex = next
-        setViewerActive(next)
-        viewerTrack.style.transform = `translateX(${viewerOffsetFor(next)}px)`
-
-        function onEnd(e: TransitionEvent) {
-            if (e.target !== viewerTrack || e.propertyName !== 'transform') return
-            viewerTrack.removeEventListener('transitionend', onEnd)
-            if (next === 0) viewerSnapTo(REAL_LAST)
-            else if (next === viewerCards.length - 1) viewerSnapTo(REAL_FIRST)
-            else snapTo(next)
-            viewerAnimating = false
-        }
-        viewerTrack.addEventListener('transitionend', onEnd)
-    }
-
-    document.getElementById('hero-prev')!.addEventListener('click', () => go(-1))
-    document.getElementById('hero-next')!.addEventListener('click', () => go(1))
-    cards[0].addEventListener('click', () => go(-1))
-    cards[cards.length - 1].addEventListener('click', () => go(1))
+    document.getElementById('hero-prev')!.addEventListener('click', () => gallery.step(-1))
+    document.getElementById('hero-next')!.addEventListener('click', () => gallery.step(1))
+    cards.slice(0, REAL_FIRST).forEach((c) => c.addEventListener('click', () => gallery.step(-1)))
+    cards
+        .slice(cards.length - REAL_FIRST)
+        .forEach((c) => c.addEventListener('click', () => gallery.step(1)))
     realCards.forEach((card, index) =>
         card.addEventListener('click', () => openViewer(card, index))
     )
     document.getElementById('viewer-close')!.addEventListener('click', closeViewer)
     document.getElementById('viewer-backdrop')!.addEventListener('click', closeViewer)
-    document.getElementById('viewer-prev')!.addEventListener('click', () => stepViewer(-1))
-    document.getElementById('viewer-next')!.addEventListener('click', () => stepViewer(1))
+    document.getElementById('viewer-prev')!.addEventListener('click', () => viewerGallery.step(-1))
+    document.getElementById('viewer-next')!.addEventListener('click', () => viewerGallery.step(1))
     document.addEventListener('keydown', (event) => {
         if (!viewer.classList.contains('open')) return
         if (event.key === 'Escape') closeViewer()
-        if (event.key === 'ArrowLeft') stepViewer(-1)
-        if (event.key === 'ArrowRight') stepViewer(1)
+        if (event.key === 'ArrowLeft') viewerGallery.step(-1)
+        if (event.key === 'ArrowRight') viewerGallery.step(1)
     })
 
     // init position (no animation)
-    snapTo(REAL_FIRST)
+    gallery.place(REAL_FIRST)
 
-    const resizeObserver = new ResizeObserver(() => snapTo(slotIndex))
+    const resizeObserver = new ResizeObserver(() => gallery.relayout())
     resizeObserver.observe(outer)
     const viewerResizeObserver = new ResizeObserver(() => {
-        if (viewer.classList.contains('open')) viewerSnapTo(viewerSlotIndex)
+        if (viewer.classList.contains('open')) viewerGallery.relayout()
     })
     viewerResizeObserver.observe(viewerOuter)
 </script>
@@ -390,10 +413,11 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
         overflow: hidden;
     }
 
+    /* Track motion is script-driven (Web Animations API); a CSS transition on
+       transform here would double-animate every position commit. */
     .gallery-track {
         display: flex;
         gap: 16px;
-        transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         will-change: transform;
     }
 
@@ -502,7 +526,6 @@ const slots = [shots.at(-1)!, ...shots, shots[0]]
     .viewer-track {
         display: flex;
         gap: 16px;
-        transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         will-change: transform;
     }
 
