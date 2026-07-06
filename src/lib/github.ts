@@ -28,11 +28,20 @@ function githubHeaders(): Record<string, string> {
     return headers
 }
 
+// The status code alone can't distinguish "rate limited because no token reached
+// the build" from "token rejected", so surface GitHub's own explanation and
+// whether the env var was visible at all.
+async function apiError(res: Response): Promise<Error> {
+    const body = (await res.text()).slice(0, 300).replace(/\s+/g, ' ')
+    const auth = process.env.GITHUB_TOKEN ? 'token present' : 'token absent'
+    return new Error(`GitHub API error ${res.status} (${auth}): ${body}`)
+}
+
 export async function getLatestRelease(): Promise<Release> {
     const res = await fetch(`https://api.github.com/repos/${REPO}/releases/latest`, {
         headers: githubHeaders(),
     })
-    if (!res.ok) throw new Error(`GitHub API error: ${res.status}`)
+    if (!res.ok) throw await apiError(res)
     return res.json()
 }
 
@@ -43,7 +52,7 @@ export async function getRecentReleases(count: number): Promise<Release[]> {
     const res = await fetch(`https://api.github.com/repos/${REPO}/releases?per_page=${perPage}`, {
         headers: githubHeaders(),
     })
-    if (!res.ok) throw new Error(`GitHub API error: ${res.status}`)
+    if (!res.ok) throw await apiError(res)
     const releases: Release[] = await res.json()
     return releases.filter((r) => !r.draft && !r.prerelease).slice(0, count)
 }
