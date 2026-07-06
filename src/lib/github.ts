@@ -6,6 +6,8 @@ export interface Release {
     body: string
     published_at: string
     html_url: string
+    draft: boolean
+    prerelease: boolean
     assets: ReleaseAsset[]
 }
 
@@ -32,4 +34,16 @@ export async function getLatestRelease(): Promise<Release> {
     })
     if (!res.ok) throw new Error(`GitHub API error: ${res.status}`)
     return res.json()
+}
+
+export async function getRecentReleases(count: number): Promise<Release[]> {
+    // The list endpoint interleaves drafts and prereleases with published releases,
+    // so over-fetch and filter down to the requested count.
+    const perPage = count + 10
+    const res = await fetch(`https://api.github.com/repos/${REPO}/releases?per_page=${perPage}`, {
+        headers: githubHeaders(),
+    })
+    if (!res.ok) throw new Error(`GitHub API error: ${res.status}`)
+    const releases: Release[] = await res.json()
+    return releases.filter((r) => !r.draft && !r.prerelease).slice(0, count)
 }

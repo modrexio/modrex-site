@@ -4,8 +4,9 @@ import Nav from '../components/Nav.astro'
 import Hero from '../components/Hero.astro'
 import Features from '../components/Features.astro'
 import DownloadSection from '../components/DownloadSection.astro'
+import Changelog from '../components/Changelog.astro'
 import SiteFooter from '../components/SiteFooter.astro'
-import { getLatestRelease } from '../lib/github'
+import { getLatestRelease, getRecentReleases } from '../lib/github'
 import type { Release } from '../lib/github'
 import { getModIndexStats } from '../lib/mod-index'
 import type { ModIndexStats } from '../lib/mod-index'
@@ -15,6 +16,13 @@ try {
     release = await getLatestRelease()
 } catch {
     // GitHub API unavailable at build time — release data optional
+}
+
+let recentReleases: Release[] = []
+try {
+    recentReleases = await getRecentReleases(3)
+} catch {
+    // GitHub API unavailable at build time - the changelog section renders nothing
 }
 
 let indexStats: ModIndexStats | null = null
@@ -56,5 +64,6 @@ const jsonLd = {
     <Hero release={release} />
     <Features indexStats={indexStats} />
     <DownloadSection release={release} />
+    <Changelog releases={recentReleases} />
     <SiteFooter />
 </BaseLayout>
