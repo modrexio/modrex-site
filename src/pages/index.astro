@@ -11,18 +11,21 @@ import type { Release } from '../lib/github'
 import { getModIndexStats } from '../lib/mod-index'
 import type { ModIndexStats } from '../lib/mod-index'
 
+// Both fetches degrade gracefully (generic download links, no changelog section),
+// but log loudly: without GITHUB_TOKEN set, shared CI build IPs hit GitHub's
+// unauthenticated rate limit and the failure is otherwise invisible in the deploy.
 let release: Release | null = null
 try {
     release = await getLatestRelease()
-} catch {
-    // GitHub API unavailable at build time — release data optional
+} catch (error) {
+    console.error('Failed to load latest release', error)
 }
 
 let recentReleases: Release[] = []
 try {
     recentReleases = await getRecentReleases(3)
-} catch {
-    // GitHub API unavailable at build time - the changelog section renders nothing
+} catch (error) {
+    console.error('Failed to load recent releases', error)
 }
 
 let indexStats: ModIndexStats | null = null
