@@ -14,6 +14,14 @@
    for sticky descendants, which breaks the sticky nav. clip only clips. */
 html {
     overflow-x: clip;
+    /* Keep anchor targets clear of the 60px sticky nav. */
+    scroll-padding-top: 60px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
 }
 
 body {

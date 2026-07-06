@@ -134,6 +134,43 @@ const linUrl =
             mobileMenu.setAttribute('aria-hidden', 'true')
         })
     )
+
+    // Scrollspy: highlight the nav tab of the section currently in view. Only
+    // does anything on the homepage, where the section anchors exist.
+    const spyLinks = [
+        ...document.querySelectorAll<HTMLAnchorElement>(
+            '.nav-links a[href^="/#"], .mobile-links a[href^="/#"]'
+        ),
+    ]
+    const sections = [...new Set(spyLinks.map((link) => link.hash.slice(1)))]
+        .map((id) => document.getElementById(id))
+        .filter((section): section is HTMLElement => section !== null)
+
+    if (sections.length > 0) {
+        let ticking = false
+
+        const updateActive = () => {
+            ticking = false
+            // Active = the last section whose top has passed under the sticky nav.
+            let currentId = ''
+            for (const section of sections) {
+                if (section.getBoundingClientRect().top <= 80) currentId = section.id
+            }
+            spyLinks.forEach((link) =>
+                link.classList.toggle('active', link.hash === `#${currentId}`)
+            )
+        }
+
+        const onScroll = () => {
+            if (ticking) return
+            ticking = true
+            requestAnimationFrame(updateActive)
+        }
+
+        window.addEventListener('scroll', onScroll, { passive: true })
+        window.addEventListener('resize', onScroll, { passive: true })
+        updateActive()
+    }
 </script>
 
 <style>

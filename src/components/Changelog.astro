@@ -103,9 +103,26 @@ const entries = releases.map((release) => ({
         body.classList.add('collapsed')
         button.hidden = false
         button.addEventListener('click', () => {
+            // Measure before canceling so a click mid-animation retargets from the
+            // current rendered height instead of snapping.
+            const start = body.offsetHeight
+            body.getAnimations().forEach((animation) => animation.cancel())
             const collapsed = body.classList.toggle('collapsed')
+            const end = body.offsetHeight
             button.setAttribute('aria-expanded', String(!collapsed))
             if (label) label.textContent = collapsed ? 'Show more' : 'Show less'
+
+            if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
+            // Animate max-height, not height: the collapsed class caps the box via
+            // max-height, and the animation must override that same property.
+            body.style.overflow = 'hidden'
+            const anim = body.animate([{ maxHeight: `${start}px` }, { maxHeight: `${end}px` }], {
+                duration: 300,
+                easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+            })
+            anim.onfinish = () => {
+                body.style.overflow = ''
+            }
         })
     })
 </script>
@@ -155,13 +172,19 @@ const entries = releases.map((release) => ({
         overflow: hidden;
     }
 
-    .rel-body.collapsed::after {
+    .rel-body::after {
         content: '';
         position: absolute;
         inset: auto 0 0 0;
         height: 72px;
         background: linear-gradient(to bottom, transparent, var(--color-surface-raised));
         pointer-events: none;
+        opacity: 0;
+        transition: opacity var(--duration) var(--ease);
+    }
+
+    .rel-body.collapsed::after {
+        opacity: 1;
     }
 
     .rel-body :global(h3) {
