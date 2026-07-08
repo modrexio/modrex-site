@@ -9,7 +9,7 @@ import Callout from '../../../components/docs/Callout.astro'
 
 For PAYDAY 3, the most common cause is a missing `-fileopenlog` launch argument.
 
-Add `-fileopenlog` to **Settings - Launch Options**. Without it, Unreal Engine 5 does not scan the
+Add `-fileopenlog` to **Settings - Launch Options**. Without it, Unreal Engine does not scan the
 `~mods/` directory and no PAYDAY 3 `.pak` mods will load regardless of what's installed.
 
 Other things to check:
@@ -27,8 +27,8 @@ If Modrex can't find the selected game automatically:
 2. Navigate to the game's installation root folder.
 3. Click **Select Folder** - Modrex validates and saves the path.
 
-On Xbox Game Pass, Modrex scans drive roots (C: through G:) for the Xbox install path. This can
-take a few seconds on the first PAYDAY 3 detection pass.
+On Xbox Game Pass, Modrex scans every fixed drive letter on your system for the Xbox install path.
+This can take a few seconds on the first PAYDAY 3 detection pass.
 
 ## "Missing file" badge on a mod
 
@@ -55,8 +55,8 @@ administrator once to restore access, then relaunch normally.
 When reporting a bug, always attach the Modrex log file:
 
 ```
-Windows   %APPDATA%\Modrex\logs\modrex.log
-Linux     ~/.config/modrex/logs/modrex.log
+Windows   %LOCALAPPDATA%\Modrex\logs\Modrex.log
+Linux     ~/.local/share/modrex/logs/Modrex.log
 ```
 
 Open it directly from **Settings - Open log file**.
