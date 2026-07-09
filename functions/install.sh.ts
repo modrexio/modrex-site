@@ -1,15 +1,15 @@
-// Serves `curl -fsSL https://modrex.net/install.sh | sh`: fetches a pinned
+// Serves curl -fsSL https://modrex.net/install.sh | sh: fetches a pinned
 // release of the shared mget engine (github.com/modrexio/mget) plus modrex's
 // own install.config.json, flattens the config into CFG_* shell exports, and
 // concatenates them into one script. See mget's README for the full design —
 // this function only implements the "Worker integration" section documented
 // there.
 //
-// The engine tag is pinned deliberately, never `main`: a bad push to mget
-// would otherwise break every project's install simultaneously the moment
-// this function re-fetches it. Bump ENGINE_TAG by hand when mget ships a
-// fix worth picking up.
-const ENGINE_TAG = 'v1.0.0'
+// The engine tag is pinned deliberately, never the main branch: a bad push to
+// mget would otherwise break every project's install simultaneously the
+// moment this function re-fetches it. Bump ENGINE_TAG by hand when mget ships
+// a fix worth picking up.
+const ENGINE_TAG = 'v1.1.0'
 const ENGINE_URL = `https://raw.githubusercontent.com/modrexio/mget/${ENGINE_TAG}/install.sh`
 const CONFIG_URL = 'https://raw.githubusercontent.com/modrexio/modrex/main/install.config.json'
 
