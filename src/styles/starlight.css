@@ -297,6 +297,34 @@ body {
     color: var(--color-accent-bright);
 }
 
+/* Code blocks: drop Expressive Code's macOS-style terminal titlebar (the three
+   dots). Titled frames keep their header so file-name tabs still work. The
+   copy button's offset normally clears the titlebar, so reset it to the
+   headerless default (0.4rem, from .expressive-code .frame). */
+.expressive-code .frame.is-terminal:not(.has-title) .header {
+    display: none;
+}
+
+.expressive-code .frame.is-terminal:not(.has-title) {
+    --button-spacing: 0.4rem;
+}
+
+.expressive-code .frame.is-terminal:not(.has-title) pre {
+    border-radius: var(--radius-sm);
+}
+
+/* Size code blocks to their content instead of the full content column, and
+   reserve room at the end of the line so the floating copy button doesn't
+   cover the last characters. */
+.sl-markdown-content .expressive-code {
+    width: fit-content;
+    max-width: 100%;
+}
+
+.sl-markdown-content .expressive-code .frame.is-terminal:not(.has-title) pre > code {
+    padding-inline-end: 3rem;
+}
+
 .sl-markdown-content code:not(:where(pre *)) {
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);

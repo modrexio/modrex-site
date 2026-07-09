@@ -19,6 +19,8 @@ const debAsset = release?.assets.find((a) => a.name === 'modrex_x86_64.deb')
 const rpmAsset = release?.assets.find((a) => a.name === 'modrex_x86_64.rpm')
 
 const fallbackUrl = 'https://github.com/modrexio/modrex/releases/latest'
+const installCmd =
+    'curl -fsSL https://raw.githubusercontent.com/modrexio/modrex/main/scripts/install.sh | bash'
 
 const windowsFiles: DlFile[] = exeAsset
     ? [
@@ -97,6 +99,22 @@ const linuxFiles: DlFile[] = [
                     <h3>Linux</h3>
                     <span class="os-badge" id="badge-lin">Your OS</span>
                 </div>
+                <div class="quick-install">
+                    <code
+                        ><span class="tok-cmd">curl</span> -fsSL https://raw.githubusercontent.com/modrexio/modrex/main/scripts/install.sh
+                        <span class="tok-pipe">|</span>
+                        <span class="tok-cmd">bash</span></code
+                    >
+                    <button
+                        class="copy-btn"
+                        id="copy-install"
+                        data-cmd={installCmd}
+                        aria-label="Copy install command"
+                    >
+                        <i data-lucide="copy"></i>
+                        <i data-lucide="check" style="display: none"></i>
+                    </button>
+                </div>
                 <div class="files">
                     {
                         linuxFiles.map((f) => (
@@ -121,9 +139,25 @@ const linuxFiles: DlFile[] = [
 </section>
 
 <script>
-    import { createIcons, Download } from 'lucide'
+    import { createIcons, Check, Copy, Download } from 'lucide'
     import { detectOs } from '../lib/os-detect'
-    createIcons({ icons: { Download } })
+    createIcons({ icons: { Check, Copy, Download } })
+
+    const copyBtn = document.getElementById('copy-install')
+    copyBtn?.addEventListener('click', async () => {
+        const cmd = copyBtn.dataset.cmd
+        if (!cmd) return
+        await navigator.clipboard.writeText(cmd)
+        const [copyIcon, checkIcon] = copyBtn.querySelectorAll<SVGElement>('svg')
+        if (copyIcon && checkIcon) {
+            copyIcon.style.display = 'none'
+            checkIcon.style.display = ''
+            setTimeout(() => {
+                copyIcon.style.display = ''
+                checkIcon.style.display = 'none'
+            }, 1500)
+        }
+    })
 
     const { isMobile, isLinux } = detectOs()
     if (!isMobile) {
@@ -144,7 +178,7 @@ const linuxFiles: DlFile[] = [
 
     .dl-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         gap: 16px;
         max-width: 760px;
         margin: 0 auto;
@@ -187,11 +221,76 @@ const linuxFiles: DlFile[] = [
         font-weight: 600;
     }
 
+    .quick-install {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 20px;
+        background: var(--color-surface-hover);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-sm);
+        padding: 10px 14px;
+    }
+
+    .quick-install code {
+        flex: 1;
+        min-width: 0;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--color-text);
+        overflow-x: auto;
+        white-space: nowrap;
+        scrollbar-width: thin;
+        scrollbar-color: var(--color-surface-light) transparent;
+        padding-bottom: 4px;
+    }
+
+    /* Same scheme as the docs code blocks (modrexCodeTheme in astro.config.mjs):
+       commands accent-bright, operators muted, arguments primary text. */
+    .quick-install .tok-cmd {
+        color: var(--color-accent-bright);
+    }
+
+    .quick-install .tok-pipe {
+        color: var(--color-text-muted);
+    }
+
+    .copy-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 28px;
+        height: 28px;
+        background: transparent;
+        border: none;
+        border-radius: var(--radius-sm);
+        color: var(--text-tertiary);
+        cursor: pointer;
+        transition:
+            color 0.15s ease,
+            background 0.15s ease;
+    }
+
+    .copy-btn:hover {
+        color: var(--color-text);
+        background: var(--color-surface-active);
+    }
+
+    .copy-btn svg {
+        width: 14px;
+        height: 14px;
+    }
+
     .files {
         display: flex;
         flex-direction: column;
         gap: 8px;
         margin-top: 20px;
+    }
+
+    .quick-install + .files {
+        margin-top: 12px;
     }
 
     .dl-file {

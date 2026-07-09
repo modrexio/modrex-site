@@ -19,7 +19,15 @@ every launch and can install them in-app - you won't need to manually reinstall 
 
 ### <OsIcon os="Linux" />Linux
 
-Pick the package for your distribution:
+The quickest way is the install script - it installs the right package through apt, dnf, or
+zypper (so updates flow through your package manager), and falls back to a self-contained
+AppImage on other distributions:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/modrexio/modrex/main/scripts/install.sh | bash
+```
+
+Or pick the package for your distribution manually:
 
 - **`.deb`** - Debian, Ubuntu, and derivatives. Install with `sudo dpkg -i modrex_x86_64.deb`.
 - **`.rpm`** - Fedora, RHEL, and derivatives. Install with `sudo rpm -i modrex_x86_64.rpm`.

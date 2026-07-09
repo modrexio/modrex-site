@@ -1,4 +1,39 @@
 import { defineConfig } from 'astro/config'
+
+// Syntax theme built from the Modrex color tokens (tokens/colors.css): commands
+// and keywords in accent-bright orange, operators muted, everything else the
+// primary off-white. Shiki themes can't reference CSS variables, so the hex
+// values are duplicated here.
+const modrexCodeTheme = {
+    name: 'modrex',
+    type: 'dark',
+    colors: {
+        'editor.background': '#1c1c1c', // --color-surface-raised
+        'editor.foreground': '#f4f4f3', // --color-text
+    },
+    tokenColors: [
+        { scope: ['comment'], settings: { foreground: '#71717a' } }, // --color-text-subtle
+        {
+            scope: [
+                'keyword',
+                'storage',
+                'entity.name.function',
+                'entity.name.command',
+                'support.function',
+                'entity.name.tag',
+            ],
+            settings: { foreground: '#f87d36' }, // --color-accent-bright
+        },
+        {
+            scope: ['keyword.operator', 'punctuation'],
+            settings: { foreground: '#8e8e96' }, // --color-text-muted
+        },
+        {
+            scope: ['string', 'variable', 'constant', 'entity.name.type', 'support'],
+            settings: { foreground: '#f4f4f3' }, // --color-text
+        },
+    ],
+}
 import mdx from '@astrojs/mdx'
 import sitemap from '@astrojs/sitemap'
 import starlight from '@astrojs/starlight'
@@ -14,6 +49,19 @@ export default defineConfig({
             favicon: '/favicon.ico',
             titleDelimiter: '-',
             customCss: ['./src/styles/starlight.css'],
+            expressiveCode: {
+                themes: [modrexCodeTheme],
+                useStarlightUiThemeColors: true,
+                styleOverrides: {
+                    borderRadius: 'var(--radius-sm)',
+                    borderColor: 'var(--color-border)',
+                    codeBackground: 'var(--color-surface-raised)',
+                    codeFontFamily: 'var(--font-mono)',
+                    frames: {
+                        frameBoxShadowCssValue: 'none',
+                    },
+                },
+            },
             disable404Route: true,
             components: {
                 Head: './src/components/starlight/Head.astro',
