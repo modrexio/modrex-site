@@ -19,8 +19,7 @@ const debAsset = release?.assets.find((a) => a.name === 'modrex_x86_64.deb')
 const rpmAsset = release?.assets.find((a) => a.name === 'modrex_x86_64.rpm')
 
 const fallbackUrl = 'https://github.com/modrexio/modrex/releases/latest'
-const installCmd =
-    'curl -fsSL https://raw.githubusercontent.com/modrexio/modrex/main/scripts/install.sh | bash'
+const installCmd = 'curl -fsSL https://modrex.net/install.sh | sh'
 
 const windowsFiles: DlFile[] = exeAsset
     ? [
@@ -130,9 +129,9 @@ const linuxFiles: DlFile[] = [
                     >
                         <div class="quick-install">
                             <code
-                                ><span class="tok-cmd">curl</span> -fsSL https://raw.githubusercontent.com/modrexio/modrex/main/scripts/install.sh
+                                ><span class="tok-cmd">curl</span> -fsSL https://modrex.net/install.sh
                                 <span class="tok-pipe">|</span>
-                                <span class="tok-cmd">bash</span></code
+                                <span class="tok-cmd">sh</span></code
                             >
                             <button
                                 class="copy-btn"
@@ -279,7 +278,12 @@ const linuxFiles: DlFile[] = [
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         gap: 16px;
-        max-width: 1056px;
+        /* The actual constraint is the .dl-file row (filename + size badge +
+           "Install (.AppImage)" button), not the quick-install command — that's
+           short enough to fit even at the narrowest width here. 880px let
+           "modrex_x86_64.AppImage" wrap to two lines; this keeps real margin
+           above the point where that starts happening again. */
+        max-width: 980px;
         margin: 0 auto;
     }
 
