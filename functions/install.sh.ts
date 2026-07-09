@@ -13,18 +13,17 @@
 //     request — picks up patches/minors automatically, never a breaking
 //     major, the same convention as GitHub Actions' @v4-style tags. Only
 //     safe if mget's SemVer discipline (major = breaking) actually holds.
-//   - "latest": resolves to whatever GitHub calls the newest release overall,
-//     including majors. No safety net at all — not used for modrex itself,
-//     but available for a project that wants full auto-update over caution.
+//   - "latest": resolves to the single highest-semver tag across all majors.
+//     No safety net at all — not used for modrex itself, but available for a
+//     project that wants full auto-update over caution.
+// mget is a script fetched directly from a tag, not a binary distribution, so
+// there's no GitHub Release to query — resolution reads tags directly for
+// both "latest" and bare-major forms, never the Releases API.
 const ENGINE_PIN = 'v1'
 const CONFIG_URL = 'https://raw.githubusercontent.com/modrexio/modrex/main/install.config.json'
 
 interface GhTag {
     name: string
-}
-
-interface GhRelease {
-    tag_name: string
 }
 
 // GitHub rejects unauthenticated API requests with no User-Agent.
@@ -35,36 +34,31 @@ function parseSemver(tag: string): { major: number; minor: number; patch: number
     return m ? { major: Number(m[1]), minor: Number(m[2]), patch: Number(m[3]) } : null
 }
 
+async function fetchTags(): Promise<GhTag[]> {
+    const res = await fetch('https://api.github.com/repos/modrexio/mget/tags?per_page=100', {
+        headers: GH_API_HEADERS,
+    })
+    if (!res.ok) throw new Error(`GitHub API (tags) failed: ${res.status}`)
+    return res.json()
+}
+
 async function resolveEngineTag(pin: string): Promise<string> {
     if (parseSemver(pin)) return pin // exact tag, no API call needed
 
-    if (pin === 'latest') {
-        const res = await fetch('https://api.github.com/repos/modrexio/mget/releases/latest', {
-            headers: GH_API_HEADERS,
-        })
-        if (!res.ok) throw new Error(`GitHub API (latest release) failed: ${res.status}`)
-        const release: GhRelease = await res.json()
-        return release.tag_name
-    }
-
     const majorMatch = pin.match(/^v(\d+)$/)
-    if (majorMatch) {
-        const res = await fetch('https://api.github.com/repos/modrexio/mget/tags?per_page=100', {
-            headers: GH_API_HEADERS,
-        })
-        if (!res.ok) throw new Error(`GitHub API (tags) failed: ${res.status}`)
-        const tags: GhTag[] = await res.json()
-        const best = tags
-            .map((t) => parseSemver(t.name))
-            .filter(
-                (v): v is NonNullable<typeof v> => v !== null && v.major === Number(majorMatch[1])
-            )
-            .sort((a, b) => b.minor - a.minor || b.patch - a.patch)[0]
-        if (!best) throw new Error(`no tags found matching ${pin}.x.x`)
-        return `v${best.major}.${best.minor}.${best.patch}`
-    }
+    if (pin !== 'latest' && !majorMatch) throw new Error(`invalid ENGINE_PIN: ${pin}`)
 
-    throw new Error(`invalid ENGINE_PIN: ${pin}`)
+    const tags = await fetchTags()
+    const wantedMajor = majorMatch ? Number(majorMatch[1]) : null
+    const best = tags
+        .map((t) => parseSemver(t.name))
+        .filter(
+            (v): v is NonNullable<typeof v> =>
+                v !== null && (wantedMajor === null || v.major === wantedMajor)
+        )
+        .sort((a, b) => b.major - a.major || b.minor - a.minor || b.patch - a.patch)[0]
+    if (!best) throw new Error(`no tags found matching ${pin}`)
+    return `v${best.major}.${best.minor}.${best.patch}`
 }
 
 interface InstallConfig {
