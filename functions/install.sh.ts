@@ -7,11 +7,65 @@
 //
 // The engine tag is pinned deliberately, never the main branch: a bad push to
 // mget would otherwise break every project's install simultaneously the
-// moment this function re-fetches it. Bump ENGINE_TAG by hand when mget ships
-// a fix worth picking up.
-const ENGINE_TAG = 'v1.1.0'
-const ENGINE_URL = `https://raw.githubusercontent.com/modrexio/mget/${ENGINE_TAG}/install.sh`
+// moment this function re-fetches it. ENGINE_PIN accepts three forms:
+//   - an exact tag ("v1.1.0"): fully deterministic, no extra API call.
+//   - a bare major ("v1"): auto-resolves to the latest v1.x.x tag on every
+//     request — picks up patches/minors automatically, never a breaking
+//     major, the same convention as GitHub Actions' @v4-style tags. Only
+//     safe if mget's SemVer discipline (major = breaking) actually holds.
+//   - "latest": resolves to whatever GitHub calls the newest release overall,
+//     including majors. No safety net at all — not used for modrex itself,
+//     but available for a project that wants full auto-update over caution.
+const ENGINE_PIN = 'v1'
 const CONFIG_URL = 'https://raw.githubusercontent.com/modrexio/modrex/main/install.config.json'
+
+interface GhTag {
+    name: string
+}
+
+interface GhRelease {
+    tag_name: string
+}
+
+// GitHub rejects unauthenticated API requests with no User-Agent.
+const GH_API_HEADERS = { 'User-Agent': 'modrex-install-worker' }
+
+function parseSemver(tag: string): { major: number; minor: number; patch: number } | null {
+    const m = tag.match(/^v(\d+)\.(\d+)\.(\d+)$/)
+    return m ? { major: Number(m[1]), minor: Number(m[2]), patch: Number(m[3]) } : null
+}
+
+async function resolveEngineTag(pin: string): Promise<string> {
+    if (parseSemver(pin)) return pin // exact tag, no API call needed
+
+    if (pin === 'latest') {
+        const res = await fetch('https://api.github.com/repos/modrexio/mget/releases/latest', {
+            headers: GH_API_HEADERS,
+        })
+        if (!res.ok) throw new Error(`GitHub API (latest release) failed: ${res.status}`)
+        const release: GhRelease = await res.json()
+        return release.tag_name
+    }
+
+    const majorMatch = pin.match(/^v(\d+)$/)
+    if (majorMatch) {
+        const res = await fetch('https://api.github.com/repos/modrexio/mget/tags?per_page=100', {
+            headers: GH_API_HEADERS,
+        })
+        if (!res.ok) throw new Error(`GitHub API (tags) failed: ${res.status}`)
+        const tags: GhTag[] = await res.json()
+        const best = tags
+            .map((t) => parseSemver(t.name))
+            .filter(
+                (v): v is NonNullable<typeof v> => v !== null && v.major === Number(majorMatch[1])
+            )
+            .sort((a, b) => b.minor - a.minor || b.patch - a.patch)[0]
+        if (!best) throw new Error(`no tags found matching ${pin}.x.x`)
+        return `v${best.major}.${best.minor}.${best.patch}`
+    }
+
+    throw new Error(`invalid ENGINE_PIN: ${pin}`)
+}
 
 interface InstallConfig {
     schema_version: number
@@ -74,7 +128,9 @@ export async function onRequestGet(): Promise<Response> {
     let engine: string
     let config: InstallConfig
     try {
-        const [engineRes, configRes] = await Promise.all([fetch(ENGINE_URL), fetch(CONFIG_URL)])
+        const engineTag = await resolveEngineTag(ENGINE_PIN)
+        const engineUrl = `https://raw.githubusercontent.com/modrexio/mget/${engineTag}/install.sh`
+        const [engineRes, configRes] = await Promise.all([fetch(engineUrl), fetch(CONFIG_URL)])
         if (!engineRes.ok) {
             return new Response(`# fetching mget engine failed: ${engineRes.status}\nexit 1\n`, {
                 status: 502,
