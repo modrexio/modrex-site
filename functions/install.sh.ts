@@ -28,6 +28,7 @@ interface InstallConfig {
     add_to_path?: boolean
     post_install_cmd?: string
     uninstall_manifest?: string
+    install_url?: string
 }
 
 // Single-quoted shell literal, the only form mget's engine ever needs to
@@ -62,6 +63,7 @@ function buildPrelude(config: InstallConfig): string {
         add_to_path: config.add_to_path ?? true,
         post_install_cmd: config.post_install_cmd ?? '',
         uninstall_manifest: config.uninstall_manifest ?? '',
+        install_url: config.install_url ?? '',
     }
     return Object.entries(flat)
         .map(([key, value]) => `CFG_${key.toUpperCase()}=${shellQuote(value)}`)
