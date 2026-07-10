@@ -49,7 +49,7 @@ functions/install.sh.ts  ← Cloudflare Pages Function serving modrex.net/instal
 
 ### Install script (`functions/install.sh.ts`)
 
-Serves `modrex.net/install.sh`, the `curl -fsSL https://modrex.net/install.sh | sh` entry point for Linux/macOS installs. It implements the "Worker integration" contract from `mget`'s README (`C:\local\modrexio\mget`): resolve an engine pin to a real mget tag, fetch the project config, concatenate, stream.
+Serves `modrex.net/install.sh`, the `curl -fsSL https://modrex.net/install.sh | sh` entry point for Linux installs (the mget engine also handles macOS, but Modrex ships no macOS build). It implements the "Worker integration" contract from `mget`'s README (`C:\local\modrexio\mget`): resolve an engine pin to a real mget tag, fetch the project config, concatenate, stream.
 
 - **Engine pin**: `ENGINE_PIN = 'v1'` (bare major), resolved on every request to the newest `v1.x.x` tag via the GitHub **tags** API, never the Releases API (mget tags are not GitHub releases) and never `@main` (a bad mget push must not break every install instantly). An exact-tag pin (`v1.1.0`) skips the API call entirely; `latest` is supported but deliberately unused for modrex.
 - **Config**: fetched from `https://raw.githubusercontent.com/modrexio/modrex/main/install.config.json` at request time, so `install.config.json` changes take effect on push to modrex-main with no site deploy.
