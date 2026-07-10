@@ -6,6 +6,7 @@ node_modules/
 .env.*
 !.env.example
 .DS_Store
+*.log
 
 # Claude Code — ignore everything except shared slash commands
 .claude/*
