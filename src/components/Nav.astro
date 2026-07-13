@@ -363,6 +363,11 @@ const linUrl =
         }
 
         .mobile-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            left: 0;
+            z-index: 1;
             display: block;
             max-height: 0;
             overflow: hidden;
@@ -370,6 +375,7 @@ const linUrl =
             opacity: 0;
             border-top: 1px solid transparent;
             background: var(--color-surface);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
             transform: translateY(-6px);
             transition:
                 max-height 260ms var(--ease),
