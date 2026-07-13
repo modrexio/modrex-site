@@ -362,10 +362,78 @@ const linUrl =
             display: flex;
         }
 
-        .mobile-menu.open {
+        .mobile-menu {
             display: block;
-            border-top: 1px solid var(--color-border);
+            max-height: 0;
+            overflow: hidden;
+            visibility: hidden;
+            opacity: 0;
+            border-top: 1px solid transparent;
             background: var(--color-surface);
+            transform: translateY(-6px);
+            transition:
+                max-height 260ms var(--ease),
+                opacity 180ms var(--ease),
+                transform 220ms var(--ease),
+                visibility 0s linear 260ms,
+                border-color 180ms var(--ease);
+        }
+
+        .mobile-menu.open {
+            max-height: calc(100dvh - 60px);
+            visibility: visible;
+            opacity: 1;
+            border-top-color: var(--color-border);
+            transform: translateY(0);
+            transition-delay: 0s;
+        }
+
+        .mobile-links > a,
+        .mobile-actions {
+            opacity: 0;
+            transform: translateY(-6px);
+            transition:
+                opacity 160ms var(--ease),
+                transform 200ms var(--ease);
+        }
+
+        .mobile-menu.open .mobile-links > a,
+        .mobile-menu.open .mobile-actions {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .mobile-menu.open .mobile-links > a:nth-child(1) {
+            transition-delay: 40ms;
+        }
+
+        .mobile-menu.open .mobile-links > a:nth-child(2) {
+            transition-delay: 65ms;
+        }
+
+        .mobile-menu.open .mobile-links > a:nth-child(3) {
+            transition-delay: 90ms;
+        }
+
+        .mobile-menu.open .mobile-links > a:nth-child(4) {
+            transition-delay: 115ms;
+        }
+
+        .mobile-menu.open .mobile-links > a:nth-child(5) {
+            transition-delay: 140ms;
+        }
+
+        .mobile-menu.open .mobile-actions {
+            transition-delay: 165ms;
+        }
+    }
+
+    @media (max-width: 50rem) and (prefers-reduced-motion: reduce) {
+        .mobile-menu,
+        .mobile-links > a,
+        .mobile-actions {
+            transition: none;
+            transform: none;
         }
     }
 </style>
