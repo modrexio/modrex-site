@@ -61,15 +61,7 @@ const jsonLd = {
     ogImageWidth={2560}
     ogImageHeight={1368}
 >
-    <link
-        rel="preload"
-        as="image"
-        type="image/avif"
-        href="/screenshots/game-picker-window-960.avif"
-        imagesrcset="/screenshots/game-picker-window-480.avif 480w, /screenshots/game-picker-window-960.avif 960w, /screenshots/game-picker-window-1600.avif 1600w"
-        imagesizes="(max-width: 640px) 88vw, 74vw"
-        slot="head"
-    />
+    <link rel="preload" as="image" href="/Game%20Picker%20Window.png" slot="head" />
     <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} slot="head" />
     <Nav release={release} />
     <Hero release={release} />

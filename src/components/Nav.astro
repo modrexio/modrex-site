@@ -59,7 +59,7 @@ const linUrl =
         <button
             class="hamburger"
             id="nav-hamburger"
-            aria-label="Open site navigation"
+            aria-label="Toggle navigation"
             aria-expanded="false"
         >
             <span></span>
@@ -122,48 +122,18 @@ const linUrl =
 
     const hamburger = document.getElementById('nav-hamburger')
     const mobileMenu = document.getElementById('mobile-menu')
-    let previousBodyOverflow = ''
-
-    const setMenuOpen = (open: boolean, returnFocus = false) => {
-        if (!hamburger || !mobileMenu) return
-        mobileMenu.classList.toggle('open', open)
-        hamburger.setAttribute('aria-expanded', String(open))
-        hamburger.setAttribute(
-            'aria-label',
-            open ? 'Close site navigation' : 'Open site navigation'
-        )
-        mobileMenu.setAttribute('aria-hidden', String(!open))
-        if (open) {
-            previousBodyOverflow = document.body.style.overflow
-            document.body.style.overflow = 'hidden'
-            mobileMenu.querySelector<HTMLAnchorElement>('a')?.focus()
-        } else {
-            document.body.style.overflow = previousBodyOverflow
-            if (returnFocus) hamburger.focus()
-        }
-    }
-
     hamburger?.addEventListener('click', () => {
-        const open = hamburger.getAttribute('aria-expanded') !== 'true'
-        setMenuOpen(open)
+        const open = mobileMenu?.classList.toggle('open')
+        hamburger.setAttribute('aria-expanded', String(!!open))
+        mobileMenu?.setAttribute('aria-hidden', String(!open))
     })
     mobileMenu?.querySelectorAll('a').forEach((a) =>
         a.addEventListener('click', () => {
-            setMenuOpen(false)
+            mobileMenu.classList.remove('open')
+            hamburger?.setAttribute('aria-expanded', 'false')
+            mobileMenu.setAttribute('aria-hidden', 'true')
         })
     )
-
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && hamburger?.getAttribute('aria-expanded') === 'true') {
-            setMenuOpen(false, true)
-        }
-    })
-
-    document.addEventListener('pointerdown', (event) => {
-        if (hamburger?.getAttribute('aria-expanded') !== 'true') return
-        const target = event.target as Node
-        if (!mobileMenu?.contains(target) && !hamburger.contains(target)) setMenuOpen(false)
-    })
 
     // Scrollspy: highlight the nav tab of the section currently in view. Only
     // does anything on the homepage, where the section anchors exist.
@@ -309,8 +279,8 @@ const linUrl =
         flex-direction: column;
         justify-content: center;
         gap: 4px;
-        width: 44px;
-        height: 44px;
+        width: 36px;
+        height: 36px;
         background: none;
         border: none;
         cursor: pointer;
@@ -361,9 +331,9 @@ const linUrl =
     }
 
     .mobile-actions .social-link {
-        width: 44px;
-        height: 44px;
-        flex-basis: 44px;
+        width: 40px;
+        height: 40px;
+        flex-basis: 40px;
         background: var(--color-surface-hover);
         border: 1px solid var(--color-border);
     }
@@ -396,8 +366,6 @@ const linUrl =
             display: block;
             border-top: 1px solid var(--color-border);
             background: var(--color-surface);
-            max-height: calc(100dvh - 60px);
-            overflow-y: auto;
         }
     }
 </style>
