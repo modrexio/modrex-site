@@ -378,11 +378,11 @@ const linUrl =
             box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
             transform: translateY(-6px);
             transition:
-                max-height 260ms var(--ease),
-                opacity 180ms var(--ease),
-                transform 220ms var(--ease),
-                visibility 0s linear 260ms,
-                border-color 180ms var(--ease);
+                max-height 260ms var(--ease) 110ms,
+                opacity 180ms var(--ease) 90ms,
+                transform 220ms var(--ease) 90ms,
+                visibility 0s linear 370ms,
+                border-color 180ms var(--ease) 90ms;
         }
 
         .mobile-menu.open {
@@ -431,6 +431,30 @@ const linUrl =
 
         .mobile-menu.open .mobile-actions {
             transition-delay: 165ms;
+        }
+
+        .mobile-menu:not(.open) .mobile-actions {
+            transition-delay: 0ms;
+        }
+
+        .mobile-menu:not(.open) .mobile-links > a:nth-child(5) {
+            transition-delay: 20ms;
+        }
+
+        .mobile-menu:not(.open) .mobile-links > a:nth-child(4) {
+            transition-delay: 40ms;
+        }
+
+        .mobile-menu:not(.open) .mobile-links > a:nth-child(3) {
+            transition-delay: 60ms;
+        }
+
+        .mobile-menu:not(.open) .mobile-links > a:nth-child(2) {
+            transition-delay: 80ms;
+        }
+
+        .mobile-menu:not(.open) .mobile-links > a:nth-child(1) {
+            transition-delay: 100ms;
         }
     }
 
