@@ -8,12 +8,32 @@ interface Props {
 const { release = null } = Astro.props
 
 const shots = [
-    { src: '/Game%20Picker%20Window.png', alt: 'Choose game' },
-    { src: '/Browse%20Mods%20Window.png', alt: 'Browse mods' },
-    { src: '/Installed%20Mods%20Window.png', alt: 'Installed mods' },
-    { src: '/News%20Window.png', alt: 'News' },
-    { src: '/Settings%20Window.png', alt: 'Settings' },
+    {
+        src: '/Game%20Picker%20Window.png',
+        optimized: '/screenshots/game-picker-window',
+        alt: 'Choose game',
+    },
+    {
+        src: '/Browse%20Mods%20Window.png',
+        optimized: '/screenshots/browse-mods-window',
+        alt: 'Browse mods',
+    },
+    {
+        src: '/Installed%20Mods%20Window.png',
+        optimized: '/screenshots/installed-mods-window',
+        alt: 'Installed mods',
+    },
+    { src: '/News%20Window.png', optimized: '/screenshots/news-window', alt: 'News' },
+    {
+        src: '/Settings%20Window.png',
+        optimized: '/screenshots/settings-window',
+        alt: 'Settings',
+    },
 ]
+
+const screenshotWidths = [480, 960, 1600]
+const screenshotSrcset = (base: string, format: 'avif' | 'webp') =>
+    screenshotWidths.map((width) => `${base}-${width}.${format} ${width}w`).join(', ')
 
 // Infinite track with two clones per edge: a wrap step travels onto the first
 // clone, and the second keeps a neighbor sliver visible beyond it; with one
@@ -67,13 +87,26 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
                     {
                         slots.map((s, i) => (
                             <div class:list={['shot-card', { active: i === CLONES }]}>
-                                <img
-                                    src={s.src}
-                                    alt={s.alt}
-                                    width="980"
-                                    height="524"
-                                    loading={i === CLONES ? 'eager' : 'lazy'}
-                                />
+                                <picture>
+                                    <source
+                                        type="image/avif"
+                                        srcset={screenshotSrcset(s.optimized, 'avif')}
+                                        sizes="(max-width: 640px) 88vw, 74vw"
+                                    />
+                                    <source
+                                        type="image/webp"
+                                        srcset={screenshotSrcset(s.optimized, 'webp')}
+                                        sizes="(max-width: 640px) 88vw, 74vw"
+                                    />
+                                    <img
+                                        src={s.src}
+                                        alt={s.alt}
+                                        width="980"
+                                        height="524"
+                                        loading={i === CLONES ? 'eager' : 'lazy'}
+                                        fetchpriority={i === CLONES ? 'high' : 'auto'}
+                                    />
+                                </picture>
                             </div>
                         ))
                     }
@@ -105,13 +138,25 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
                     {
                         slots.map((s, i) => (
                             <div class:list={['viewer-card', { active: i === CLONES }]}>
-                                <img
-                                    src={s.src}
-                                    alt={s.alt}
-                                    width="1180"
-                                    height="631"
-                                    loading="lazy"
-                                />
+                                <picture>
+                                    <source
+                                        type="image/avif"
+                                        srcset={screenshotSrcset(s.optimized, 'avif')}
+                                        sizes="88vw"
+                                    />
+                                    <source
+                                        type="image/webp"
+                                        srcset={screenshotSrcset(s.optimized, 'webp')}
+                                        sizes="88vw"
+                                    />
+                                    <img
+                                        src={s.src}
+                                        alt={s.alt}
+                                        width="1180"
+                                        height="631"
+                                        loading="lazy"
+                                    />
+                                </picture>
                             </div>
                         ))
                     }
@@ -445,6 +490,7 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
         cursor: zoom-in;
     }
 
+    .shot-card picture,
     .shot-card img {
         display: block;
         width: 100%;
@@ -549,9 +595,13 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
         transform: scale(1);
     }
 
+    .viewer-card picture,
     .viewer-card img {
         display: block;
         width: 100%;
+    }
+
+    .viewer-card img {
         max-height: calc(100dvh - 96px);
         object-fit: contain;
     }
