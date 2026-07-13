@@ -218,7 +218,7 @@ h2.sec-title {
     }
 
     section {
-        padding: 64px 0;
+        padding: 56px 0;
     }
 
     h2.sec-title {
@@ -226,7 +226,8 @@ h2.sec-title {
     }
 
     .sec-head {
-        margin-bottom: 40px;
+        margin-bottom: 32px;
+        text-align: left;
     }
 
     .doc-prose h1 {

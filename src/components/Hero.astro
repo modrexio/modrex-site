@@ -609,6 +609,7 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
     @media (max-width: 640px) {
         .hero-inner {
             padding: 40px 0 28px;
+            text-align: left;
         }
 
         .hero-title {
@@ -617,18 +618,26 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
 
         .hero-sub {
             font-size: 16px;
+            margin-right: 0;
+            margin-left: 0;
         }
 
         .cta-row {
-            width: min(100%, 320px);
-            margin-right: auto;
-            margin-left: auto;
+            width: 100%;
+            margin-top: 24px;
+            margin-right: 0;
+            margin-left: 0;
             align-items: stretch;
             flex-direction: column;
         }
 
         .cta-row .btn-lg {
             width: 100%;
+            min-height: 48px;
+        }
+
+        .version-pill {
+            margin-top: 16px;
         }
 
         .shot-row {
@@ -649,8 +658,8 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
         .nav-btn {
             position: absolute;
             z-index: 10;
-            width: 36px;
-            height: 36px;
+            width: 44px;
+            height: 44px;
             background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(6px);
             border-color: rgba(255, 255, 255, 0.12);
@@ -680,6 +689,13 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
             backdrop-filter: blur(6px);
             border-color: rgba(255, 255, 255, 0.12);
             color: #fff;
+            width: 44px;
+            height: 44px;
+        }
+
+        .viewer-close {
+            width: 44px;
+            height: 44px;
         }
 
         #viewer-prev {
