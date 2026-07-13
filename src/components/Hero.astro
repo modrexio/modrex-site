@@ -12,22 +12,36 @@ const shots = [
         src: '/Game%20Picker%20Window.png',
         optimized: '/screenshots/game-picker-window',
         alt: 'Choose game',
+        title: 'Choose your game',
+        description: 'Modrex detects supported games and keeps each mod library separate.',
     },
     {
         src: '/Browse%20Mods%20Window.png',
         optimized: '/screenshots/browse-mods-window',
         alt: 'Browse mods',
+        title: 'Browse ModWorkshop',
+        description: 'Search, filter, and install supported mods without leaving the app.',
     },
     {
         src: '/Installed%20Mods%20Window.png',
         optimized: '/screenshots/installed-mods-window',
         alt: 'Installed mods',
+        title: 'Manage everything in one place',
+        description: 'Enable, update, organize, and remove installed mods from one library.',
     },
-    { src: '/News%20Window.png', optimized: '/screenshots/news-window', alt: 'News' },
+    {
+        src: '/News%20Window.png',
+        optimized: '/screenshots/news-window',
+        alt: 'News',
+        title: 'Keep up with your games',
+        description: 'See relevant updates and community news alongside your mod library.',
+    },
     {
         src: '/Settings%20Window.png',
         optimized: '/screenshots/settings-window',
         alt: 'Settings',
+        title: 'Set it up your way',
+        description: 'Configure paths, launch behavior, appearance, and updates in one place.',
     },
 ]
 
@@ -86,7 +100,11 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
                 <div class="gallery-track" id="hero-track">
                     {
                         slots.map((s, i) => (
-                            <div class:list={['shot-card', { active: i === CLONES }]}>
+                            <div
+                                class:list={['shot-card', { active: i === CLONES }]}
+                                data-title={s.title}
+                                data-description={s.description}
+                            >
                                 <picture>
                                     <source
                                         type="image/avif"
@@ -105,6 +123,7 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
                                         height="524"
                                         loading={i === CLONES ? 'eager' : 'lazy'}
                                         fetchpriority={i === CLONES ? 'high' : 'auto'}
+                                        draggable="false"
                                     />
                                 </picture>
                             </div>
@@ -115,6 +134,17 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
             <button class="nav-btn" id="hero-next" aria-label="Next">
                 <i data-lucide="chevron-right"></i>
             </button>
+        </div>
+        <div class="gallery-meta" aria-live="polite">
+            <div class="gallery-position">
+                <span id="gallery-current">1</span>
+                <span aria-hidden="true">/</span>
+                <span>{shots.length}</span>
+            </div>
+            <div>
+                <h2 id="gallery-title">{shots[0].title}</h2>
+                <p id="gallery-description">{shots[0].description}</p>
+            </div>
         </div>
     </div>
 
@@ -155,6 +185,7 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
                                         width="1180"
                                         height="631"
                                         loading="lazy"
+                                        draggable="false"
                                     />
                                 </picture>
                             </div>
@@ -202,6 +233,19 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
     const GAP = 16
     const STEP_MS = 450
     const STEP_EASING = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+    let suppressCardClick = false
+
+    function updateGalleryMeta(index: number) {
+        const normalized =
+            (((index - REAL_FIRST) % realCards.length) + realCards.length) % realCards.length
+        const current = document.getElementById('gallery-current')
+        const title = document.getElementById('gallery-title')
+        const description = document.getElementById('gallery-description')
+        if (current) current.textContent = String(normalized + 1)
+        const activeCard = realCards[normalized]
+        if (title) title.textContent = activeCard.dataset.title ?? ''
+        if (description) description.textContent = activeCard.dataset.description ?? ''
+    }
 
     // Steps are driven by the Web Animations API, not a CSS transition: the
     // committed transform always holds the step's final position (the animation
@@ -307,12 +351,13 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
         }
     }
 
-    const gallery = createCarousel(outer, track, cards)
+    const gallery = createCarousel(outer, track, cards, updateGalleryMeta)
     // The viewer mirrors its position onto the hero once a step settles, so
     // closing the viewer leaves the hero on the same screenshot.
-    const viewerGallery = createCarousel(viewerOuter, viewerTrack, viewerCards, (i) =>
+    const viewerGallery = createCarousel(viewerOuter, viewerTrack, viewerCards, (i) => {
         gallery.place(i)
-    )
+        updateGalleryMeta(i)
+    })
 
     function openViewer(card: HTMLElement, index: number) {
         if (!card.classList.contains('active')) return
@@ -331,6 +376,35 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
         document.body.style.overflow = ''
     }
 
+    function addSwipeGesture(element: HTMLElement, step: (direction: number) => void) {
+        let startX = 0
+        let startY = 0
+        let pointerId: number | null = null
+
+        element.addEventListener('pointerdown', (event) => {
+            if (event.pointerType === 'mouse') return
+            pointerId = event.pointerId
+            startX = event.clientX
+            startY = event.clientY
+        })
+
+        element.addEventListener('pointerup', (event) => {
+            if (pointerId !== event.pointerId) return
+            const deltaX = event.clientX - startX
+            const deltaY = event.clientY - startY
+            pointerId = null
+            if (Math.abs(deltaX) < 40 || Math.abs(deltaX) <= Math.abs(deltaY)) return
+            suppressCardClick = true
+            step(deltaX < 0 ? 1 : -1)
+            window.setTimeout(() => (suppressCardClick = false), 0)
+        })
+
+        element.addEventListener('pointercancel', () => (pointerId = null))
+    }
+
+    addSwipeGesture(outer, (direction) => gallery.step(direction))
+    addSwipeGesture(viewerOuter, (direction) => viewerGallery.step(direction))
+
     document.getElementById('hero-prev')!.addEventListener('click', () => gallery.step(-1))
     document.getElementById('hero-next')!.addEventListener('click', () => gallery.step(1))
     cards.slice(0, REAL_FIRST).forEach((c) => c.addEventListener('click', () => gallery.step(-1)))
@@ -338,7 +412,9 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
         .slice(cards.length - REAL_FIRST)
         .forEach((c) => c.addEventListener('click', () => gallery.step(1)))
     realCards.forEach((card, index) =>
-        card.addEventListener('click', () => openViewer(card, index))
+        card.addEventListener('click', () => {
+            if (!suppressCardClick) openViewer(card, index)
+        })
     )
     document.getElementById('viewer-close')!.addEventListener('click', closeViewer)
     document.getElementById('viewer-backdrop')!.addEventListener('click', closeViewer)
@@ -456,6 +532,7 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
         flex: 1;
         min-width: 0;
         overflow: hidden;
+        touch-action: pan-y;
     }
 
     /* Track motion is script-driven (Web Animations API); a CSS transition on
@@ -494,6 +571,7 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
     .shot-card img {
         display: block;
         width: 100%;
+        user-select: none;
     }
 
     .nav-btn {
@@ -567,6 +645,7 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
         flex: 1;
         min-width: 0;
         overflow: hidden;
+        touch-action: pan-y;
     }
 
     .viewer-track {
@@ -604,6 +683,7 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
     .viewer-card img {
         max-height: calc(100dvh - 96px);
         object-fit: contain;
+        user-select: none;
     }
 
     .viewer-close {
@@ -688,6 +768,36 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
             margin-bottom: 32px;
         }
 
+        .gallery-meta {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            gap: 16px;
+            align-items: start;
+            margin: -8px 0 36px;
+        }
+
+        .gallery-position {
+            display: flex;
+            gap: 4px;
+            color: var(--color-accent-bright);
+            font-family: var(--font-mono);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .gallery-meta h2 {
+            margin: 0;
+            font-size: 17px;
+            line-height: 1.3;
+        }
+
+        .gallery-meta p {
+            margin: 6px 0 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
         .shot-card {
             flex: 0 0 88%;
         }
@@ -746,6 +856,12 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
 
         .viewer-card {
             flex: 0 0 88%;
+        }
+    }
+
+    @media (min-width: 641px) {
+        .gallery-meta {
+            display: none;
         }
     }
 </style>
