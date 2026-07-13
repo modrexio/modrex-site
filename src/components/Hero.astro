@@ -60,9 +60,12 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
     <div class="wrap">
         <div class="hero-inner">
             <h1 class="hero-title">MODREX<br /><span class="accent">MOD MANAGER</span></h1>
-            <p class="hero-sub">
+            <p class="hero-sub hero-sub-desktop">
                 Browse, install, and organize mods from modworkshop - one click, no file juggling.
                 Launch modded or vanilla straight from the app.
+            </p>
+            <p class="hero-sub hero-sub-mobile">
+                Find, install, and organize ModWorkshop mods from one desktop app.
             </p>
             <div class="cta-row">
                 <a href="/#download" id="hero-dl" class="btn-lg primary">
@@ -146,6 +149,12 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
                 <p id="gallery-description">{shots[0].description}</p>
             </div>
         </div>
+        <div class="mobile-proof">
+            <span>Free and open source</span>
+            <a href="https://modworkshop.net" target="_blank" rel="noopener">
+                Powered by ModWorkshop
+            </a>
+        </div>
     </div>
 
     <div class="image-viewer" id="image-viewer" aria-hidden="true">
@@ -209,10 +218,13 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
     const label = document.getElementById('hero-dl-label')
     const icon = document.getElementById('hero-dl-icon') as HTMLImageElement | null
     if (isMobile) {
-        if (label) label.textContent = 'Download'
+        if (label) label.textContent = 'Get Modrex on your PC'
         if (icon) icon.style.display = 'none'
-        const other = document.querySelector<HTMLElement>('.other-platforms')
-        if (other) other.style.display = 'none'
+        const other = document.querySelector<HTMLAnchorElement>('.other-platforms')
+        if (other) {
+            other.textContent = 'See supported games'
+            other.href = '/docs/games/'
+        }
     } else if (isLinux) {
         if (label) label.textContent = 'Download for Linux'
         if (icon) icon.src = '/icons/linux-white.svg'
@@ -471,6 +483,11 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
         line-height: 1.6;
         color: var(--text-secondary);
         overflow-wrap: break-word;
+    }
+
+    .hero-sub-mobile,
+    .mobile-proof {
+        display: none;
     }
 
     .cta-row {
@@ -742,11 +759,21 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
         }
 
         .hero-title {
-            font-size: clamp(46px, 13vw, 64px);
+            font-size: clamp(44px, 12.5vw, 60px);
         }
 
         .hero-sub {
             font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .hero-sub-desktop {
+            display: none;
+        }
+
+        .hero-sub-mobile {
+            display: block;
+            max-width: 34ch;
         }
 
         .cta-row {
@@ -755,10 +782,17 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
             margin-left: auto;
             align-items: stretch;
             flex-direction: column;
+            margin-top: 24px;
         }
 
         .cta-row .btn-lg {
             width: 100%;
+            min-height: 48px;
+        }
+
+        .version-pill,
+        .hero-meta {
+            display: none;
         }
 
         .shot-row {
@@ -796,6 +830,22 @@ const slots = [...shots.slice(-CLONES), ...shots, ...shots.slice(0, CLONES)]
             color: var(--text-secondary);
             font-size: 14px;
             line-height: 1.5;
+        }
+
+        .mobile-proof {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: -12px 0 32px;
+            color: var(--text-tertiary);
+            font-size: 12px;
+        }
+
+        .mobile-proof a {
+            color: var(--text-secondary);
+            text-decoration: none;
         }
 
         .shot-card {
