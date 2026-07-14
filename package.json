@@ -8,6 +8,8 @@
         "preview": "astro preview",
         "typecheck": "astro check",
         "typecheck:functions": "tsc -p functions/tsconfig.json",
+        "test": "vitest",
+        "test:run": "vitest run",
         "lint": "eslint src/",
         "lint:fix": "eslint src/ --fix",
         "format": "prettier --write .",
@@ -42,6 +44,7 @@
         "tailwindcss": "^4.3.0",
         "typescript": "^6.0.3",
         "typescript-eslint": "^8.60.1",
+        "vitest": "^4.1.10",
         "zod": "^4.4.3"
     },
     "dependencies": {

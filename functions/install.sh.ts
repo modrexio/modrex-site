@@ -29,7 +29,7 @@ interface GhTag {
 // GitHub rejects unauthenticated API requests with no User-Agent.
 const GH_API_HEADERS = { 'User-Agent': 'modrex-install-worker' }
 
-function parseSemver(tag: string): { major: number; minor: number; patch: number } | null {
+export function parseSemver(tag: string): { major: number; minor: number; patch: number } | null {
     const m = tag.match(/^v(\d+)\.(\d+)\.(\d+)$/)
     return m ? { major: Number(m[1]), minor: Number(m[2]), patch: Number(m[3]) } : null
 }
@@ -42,7 +42,7 @@ async function fetchTags(): Promise<GhTag[]> {
     return res.json()
 }
 
-async function resolveEngineTag(pin: string): Promise<string> {
+export async function resolveEngineTag(pin: string): Promise<string> {
     if (parseSemver(pin)) return pin // exact tag, no API call needed
 
     const majorMatch = pin.match(/^v(\d+)$/)
@@ -61,7 +61,7 @@ async function resolveEngineTag(pin: string): Promise<string> {
     return `v${best.major}.${best.minor}.${best.patch}`
 }
 
-interface InstallConfig {
+export interface InstallConfig {
     schema_version: number
     project_name: string
     github_repo?: string
@@ -85,7 +85,7 @@ interface InstallConfig {
 // exactly how a config value turns into unintended shell code — see mget's
 // README, "Worker integration" — so this is the one thing here that must not
 // be simplified away.
-function shellQuote(value: unknown): string {
+export function shellQuote(value: unknown): string {
     return `'${String(value ?? '').replaceAll("'", `'"'"'`)}'`
 }
 
@@ -95,7 +95,7 @@ function flattenPreferredVariant(variant: Record<string, string> | undefined): s
         .join(' ')
 }
 
-function buildPrelude(config: InstallConfig): string {
+export function buildPrelude(config: InstallConfig): string {
     const flat: Record<string, unknown> = {
         schema_version: config.schema_version,
         project_name: config.project_name,
