@@ -136,7 +136,7 @@ At `≤768px`, `.nav-links` and `.nav-right` are hidden and a hamburger button a
 - Fenced code blocks go through Expressive Code with the inline `modrexCodeTheme` in `astro.config.mjs` — its hex values are deliberately duplicated from `tokens/colors.css` because Shiki themes can't reference CSS variables; keep them in sync when tokens change.
 - `disable404Route: true` — the site's own `src/pages/404.astro` handles 404s for docs URLs too.
 - Custom MDX components live in `src/components/docs/`: `Callout` (default `type="info"`, or `type="warning"`) plus the game-docs family (`GameFacts`, `GameSupportTable`, `LauncherMatrix`, `LauncherSupportTable`, `ModTargetsTable`, `SupportBadge`, `OsIcon`, `LauncherIcon`). Starlight's own `CardGrid`/`LinkCard` are used too. Each must be imported at the top of the MDX file that uses it.
-- Yes/no table cells render `SupportBadge` — the old shields.io badge images are gone; don't reintroduce remote badge URLs.
+- Yes/no table cells render `SupportBadge`, which emits an `img.shields.io` badge image (lazy-loaded). This is deliberate; `img.shields.io` is whitelisted in the `public/_headers` CSP `img-src` for it.
 - The game tables/facts are driven by `src/data/docsGames.ts` (typed, per-game) — add or change game data there, not inline in MDX.
 - Docs-specific styling (including responsive layout) lives in `src/styles/starlight.css`, loaded via the starlight `customCss` option.
 
