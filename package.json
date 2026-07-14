@@ -7,6 +7,7 @@
         "build": "astro build",
         "preview": "astro preview",
         "typecheck": "astro check",
+        "typecheck:functions": "tsc -p functions/tsconfig.json",
         "lint": "eslint src/",
         "lint:fix": "eslint src/ --fix",
         "format": "prettier --write .",
